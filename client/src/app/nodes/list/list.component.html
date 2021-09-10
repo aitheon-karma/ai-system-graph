@@ -1,0 +1,21 @@
+<div class="list">
+    <div class="list__header">
+        <div class="list__title">{{ label }}</div>
+        <button class="button button--ghost button--medium"
+                (click)="onAdd($event)"
+                type="button">
+            add {{ label === 'Groups' ? 'group' : 'node' }}
+        </button>
+    </div>
+    <div class="list__content">
+        <div class="list__item"
+             [class.list__item--active]="item._id === selectedId"
+             *ngFor="let item of items"
+             (click)="onSelect($event, item)">
+            <span>{{ item?.name }}</span>
+            <span class="icon icon--edit icon--dynamic list__item-icon-edit"
+                  *ngIf="label === 'Groups'"
+                  (click)="onEdit($event, item)"></span>
+        </div>
+    </div>
+</div>

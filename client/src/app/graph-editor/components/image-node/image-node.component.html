@@ -1,0 +1,58 @@
+<div #nodeViewRef
+     (mouseout)="hideOptionsMenuButton()"
+     (mouseover)="showOptionsMenuButton()"
+     (dblclick)="nodeData?.image?.signedUrl ? openImagePreview() : ''"
+     [class.image-node--selected]="selected()"
+     [class.image-node--edit]="isEditMode"
+     class="image-node">
+
+    <div class="image-node__show-more">
+        <ai-show-more-menu [items]="showMoreItems"
+                           #showMoreMenu
+                           *ngIf="!isEditMode && isOptionsButtonVisible"
+                           [small]="true"
+                           (closed)="isOptionsButtonVisible = false; node.update()"
+                           (itemSelected)="onOptionsMenuAction($event)"></ai-show-more-menu>
+    </div>
+
+    <img [src]="nodeData.image.signedUrl"
+         [width]="nodeData?.size[0]"
+         [height]="nodeData?.size[1]"
+         (load)="imageLoaded()"
+         class="image-node__image"
+         [class.image-node__image--edit]="isEditMode"
+         *ngIf="nodeData?.image?.signedUrl; else placeholder"
+         [alt]="nodeData.image.name">
+
+    <ng-template #placeholder>
+        <div class="image-node__placeholder"
+             (click)="selectImage($event)"
+             aiTooltip="Press to select image">
+            <div class="placeholder__inner">
+                <div class="icon icon--image"></div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-container *ngIf="isEditMode">
+        <div class="image-node__edit-buttons">
+            <div class="icon icon--image"
+                 aiTooltip="Select image"
+                 (click)="selectImage($event)">
+            </div>
+            <button class="button button--ghost button--small"
+                (click)="saveChanges($event)">
+                save
+            </button>
+        </div>
+
+        <div class="image-node__control image-node__control--nw"
+             (pointerdown)="resize($event, sides.NW)"></div>
+        <div class="image-node__control image-node__control--ne"
+             (pointerdown)="resize($event, sides.NE)"></div>
+        <div class="image-node__control image-node__control--se"
+             (pointerdown)="resize($event, sides.SE)"></div>
+        <div class="image-node__control image-node__control--sw"
+             (pointerdown)="resize($event, sides.SW)"></div>
+    </ng-container>
+</div>

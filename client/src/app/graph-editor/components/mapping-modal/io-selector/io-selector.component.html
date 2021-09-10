@@ -1,0 +1,54 @@
+<div class="io-selector"
+     (click)="toggle($event)"
+     [class.io-selector--opened]="isOpened">
+    <div class="io-selector__value">
+        <div class="io-selector__icon"></div>
+        <span *ngIf="selectedIo; else placeholder">{{ selectedIo.name }}</span>
+        <ng-template #placeholder>
+            <span class="io-selector__placeholder">
+                {{ 'Select ' + ioType | titlecase }}
+            </span>
+        </ng-template>
+        <div class="icon icon--dynamic icon--arrow-drop-down ml--auto io-selector__icon-drop-down"
+             [class.icon--active]="isOpened"
+             [class.io-selector__icon-drop-up]="isOpened"></div>
+    </div>
+
+    <div class="io-selector__dropdown"
+         aiClickOutside
+         (click)="onDropdownClick($event)"
+         (clickedOutside)="close()"
+         *ngIf="isOpened">
+        <div class="search-container search-container--contained io-selector__io-search"
+             [class.search-container--filled]="searchControl?.value">
+            <input type="search"
+                   [formControl]="searchControl"
+                   placeholder="Search"
+                   class="search-container__input">
+            <div class="search-container__button icon icon--search icon--size-16px"></div>
+            <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+                 (click)="searchControl.reset()"></div>
+        </div>
+
+        <div class="io-selector__sections">
+            <div class="io-selector__empty-message" *ngIf="isResultsEmpty; else sections">
+                No results to show
+            </div>
+            <ng-template #sections>
+                <div class="io-selector__section"
+                     *ngFor="let node of io">
+                    <div class="io-selector__section-title">{{ node?.nodeName }}</div>
+                    <div class="io-selector__io-list">
+                        <div class="io-selector__io-list-item"
+                             [class.io-selector__io-list-item--selected]="io._id === selectedIo?._id"
+                             (click)="onIoSelect($event, io)"
+                             *ngFor="let io of node?.filteredIo">
+                            <div class="io-selector__icon"></div>
+                            {{ io?.name }}
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

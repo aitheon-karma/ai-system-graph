@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="9px" viewBox="0 0 17 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon / 24-cont / actions / done-all-24</title>
+    <defs>
+        <path d="M15.805726,8.19918284 C15.5398773,7.93360572 15.1104294,7.93360572 14.8445808,8.19918284 L11,12.0398366 L11.9611452,13 L15.805726,9.1525366 C16.064758,8.89376915 16.064758,8.45795029 15.805726,8.19918284 Z M19.679839,8.20831265 L12.01864,15.2745621 L9.32016105,12.7927923 C9.0177453,12.5138614 8.52922756,12.5138614 8.22681181,12.7927923 C7.92439606,13.0717232 7.92439606,13.5223039 8.22681181,13.8012348 L11.4680883,16.7908018 C11.770504,17.0697327 12.2590218,17.0697327 12.5614375,16.7908018 L20.7731882,9.2239072 C21.0756039,8.94497631 21.0756039,8.49439562 20.7731882,8.21546473 L20.7654339,8.21546473 C20.4707724,7.92938175 19.9822547,7.92938175 19.679839,8.20831265 Z M4.22218002,14.1075182 L7.39726548,16.8108327 C7.69350551,17.0630558 8.17204709,17.0630558 8.46828712,16.8108327 L9,16.3581245 L5.29320167,13.1891673 C4.99696164,12.9369442 4.51842005,12.9369442 4.22218002,13.1891673 C3.92593999,13.4413905 3.92593999,13.8552951 4.22218002,14.1075182 L4.22218002,14.1075182 Z" id="path-1"></path>
+    </defs>
+    <g id="nodes" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="40-Nodes-/-01_02_Category-/-Create-request-/-Customization" transform="translate(-563.000000, -159.000000)">
+            <g id="Group-11" transform="translate(440.000000, 87.000000)">
+                <g id="Group-8">
+                    <g id="Group-6">
+                        <g id="Group-9">
+                            <g id="Group-12" transform="translate(24.000000, 64.000000)">
+                                <g id="icon-/-24-cont-/-actions-/-done-all-24" transform="translate(95.000000, 0.000000)">
+                                    <mask id="mask-2" fill="white">
+                                        <use xlink:href="#path-1"></use>
+                                    </mask>
+                                    <use id="Shape" fill="#7E7E7E" fill-rule="nonzero" xlink:href="#path-1"></use>
+                                    <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" stroke="#7E7E7E" stroke-width="1">
+                                        <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0.5" y="0.5" width="23" height="23"></rect>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

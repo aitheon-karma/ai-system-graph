@@ -1,0 +1,135 @@
+<form [formGroup]="ioForm">
+    <div class="io-form__section-title io-form__section-title--mt-0">inputs</div>
+    <div class="io-form__section io-form__section--drag-wrap"
+         cdkDropList
+         [cdkDropListData]="inputsArray"
+         (cdkDropListDropped)="ioDraggingEnded($event, 'input')">
+        <div class="io-form__inputs-wrap io-form__inputs-wrap--draggable"
+             formArrayName="inputs"
+             cdkDragBoundary=".io-form__section--drag-wrap"
+             cdkDrag
+             [cdkDragData]="input"
+             *ngFor="let input of inputsArray.controls; let i = index">
+            <ng-container [formGroupName]="i">
+                <div class="io-form__io-multiple">
+                    <label class="m--0 mr--8">Multiple:</label>
+                    <label class="switch">
+                        <input class="switch__input"
+                               name="switchExample"
+                               formControlName="multiple"
+                               type="checkbox"
+                               tabindex="1">
+                        <span class="switch__toggle"></span>
+                    </label>
+                </div>
+                <div class="io-form__input-wrap io-form__io-wrap io-form__io-wrap--width-25 pr--16">
+                    <label [class.error]="submitted &&!input.get('name').valid">Name</label>
+                    <div class="input-wrap input-wrap--contained input-wrap--small"
+                         [class.input-wrap--disabled]="!allowAddIo"
+                         [class.input-wrap--error]="submitted &&!input.get('name').valid">
+                        <input type="text"
+                               placeholder="Input Name"
+                               class="input-wrap__input"
+                               formControlName="name">
+                    </div>
+                </div>
+                <div class="io-form__input-wrap io-form__io-wrap io-form__io-wrap--placement pr--16">
+                    <label [class.error]="submitted &&!input.get('placement').valid">
+                        Placement
+                        {{ submitted && input.get('placement').hasError('required') ? ' is required' : '' }}
+                    </label>
+                    <ng-select class="dropdown dropdown--contained"
+                               [class.dropdown--error]="submitted && !input.get('placement').valid"
+                               [items]="placements"
+                               bindLabel="label"
+                               bindValue="value"
+                               [clearable]="false"
+                               formControlName="placement"
+                               placeholder="Placement">
+                    </ng-select>
+                </div>
+                <div class="io-form__input-wrap io-form__io-wrap io-form__io-wrap--max-width">
+                    <label [class.error]="submitted &&!input.get('socket').valid">
+                        Socket
+                        {{ submitted && input.get('socket').hasError('required') ? ' is required' : '' }}
+                    </label>
+                    <ai-tree-dropdown placeholder="Select Socket"
+                                      [class.disabled]="input.get('socket').disabled"
+                                      formControlName="socket"
+                                      [turnDown]="true"
+                                      [error]="submitted && !input.get('socket').valid"
+                                      [items]="groupedSockets"></ai-tree-dropdown>
+                </div>
+                <div class="icon icon--dynamic icon--delete io-form__io-delete"
+                     *ngIf="allowAddIo"
+                     (click)="deleteIO($event, i, 'input')"></div>
+            </ng-container>
+        </div>
+        <button class="button button--ghost button--small io-form__add-io"
+                *ngIf="allowAddIo"
+                (click)="addIO($event, 'input')">
+            add input
+        </button>
+    </div>
+    <div class="io-form__section-title">outputs</div>
+    <div class="io-form__section io-form__section--drag-wrap mb--16"
+         cdkDropList
+         [cdkDropListData]="outputsArray"
+         (cdkDropListDropped)="ioDraggingEnded($event, 'output')">
+        <div class="io-form__inputs-wrap io-form__inputs-wrap--draggable"
+             formArrayName="outputs"
+             cdkDragBoundary=".io-form__section--drag-wrap"
+             cdkDrag
+             [cdkDragData]="output"
+             *ngFor="let output of outputsArray.controls; let i = index">
+            <ng-container [formGroupName]="i">
+                <div class="io-form__input-wrap io-form__io-wrap io-form__io-wrap--max-width pr--16">
+                    <label [class.error]="submitted &&!output.get('name').valid">Name</label>
+                    <div class="input-wrap input-wrap--contained input-wrap--small"
+                         [class.input-wrap--disabled]="!allowAddIo"
+                         [class.input-wrap--error]="submitted &&!output.get('name').valid">
+                        <input type="text"
+                               placeholder="Output Name"
+                               class="input-wrap__input"
+                               formControlName="name">
+                    </div>
+                </div>
+                <div class="io-form__input-wrap io-form__io-wrap pr--16">
+                    <label [class.error]="submitted &&!output.get('placement').valid">
+                        Placement
+                        {{ submitted && output.get('placement').hasError('required') ? ' is required' : '' }}
+                    </label>
+                    <ng-select class="dropdown dropdown--contained"
+                               [class.dropdown--error]="submitted && !output.get('placement').valid"
+                               [items]="placements"
+                               bindLabel="label"
+                               bindValue="value"
+                               [clearable]="false"
+                               formControlName="placement"
+                               placeholder="Placement">
+                    </ng-select>
+                </div>
+                <div class="io-form__input-wrap io-form__io-wrap--max-width">
+                    <label [class.error]="submitted &&!output.get('socket').valid">
+                        Socket
+                        {{ submitted && output.get('socket').hasError('required') ? ' is required' : '' }}
+                    </label>
+                    <ai-tree-dropdown placeholder="Select Socket"
+                                      formControlName="socket"
+                                      [turnDown]="true"
+                                      [class.disabled]="output.get('socket').disabled"
+                                      [error]="submitted &&!output.get('socket').valid"
+                                      [items]="groupedSockets"></ai-tree-dropdown>
+                </div>
+                <div class="icon icon--dynamic icon--delete io-form__io-delete"
+                     *ngIf="allowAddIo"
+                     (click)="deleteIO($event, i, 'output')"></div>
+            </ng-container>
+        </div>
+        <button class="button button--ghost button--small io-form__add-io"
+                *ngIf="allowAddIo"
+                (click)="addIO($event, 'output')">
+            add output
+        </button>
+    </div>
+</form>

@@ -1,0 +1,22 @@
+<div class="socket-view"
+     [aiTooltip]="isChannel ? channelDescription : io.socket?.name"
+     [placement]="placement?.toLowerCase() || 'top'"
+     [class.socket-view--reverse]="placement === socketPlacements.RIGHT">
+    <ng-container *ngIf="!isChannel; else channelView">
+        <div class="socket-view__socket-dot"
+             [ngStyle]="socketStyles">
+        </div>
+        <div class="icon socket-view__socket-chevron"
+             [class.socket-view__socket-chevron--in]="isInterfaceNode ? ioData?.type === 'OUTPUT' : ioData?.type === 'INPUT'"
+             [class.socket-view__socket-chevron--out]="isInterfaceNode ? ioData?.type === 'INPUT' : ioData?.type === 'OUTPUT'"
+             [class.icon--chevron-left]="placement === socketPlacements.RIGHT && ioData?.type === 'INPUT' ||
+                 placement === socketPlacements.LEFT && ioData?.type === 'OUTPUT'"
+             [class.icon--chevron-right]="placement === socketPlacements.LEFT && ioData?.type === 'INPUT' ||
+                 placement === socketPlacements.RIGHT && ioData?.type === 'OUTPUT'"></div>
+    </ng-container>
+
+    <ng-template #channelView>
+        <div class="channel-icon {{ 'channel-icon--' + channelType }}"
+             [class.channel-icon--running]="isIoConnectedAndRunning"></div>
+    </ng-template>
+</div>

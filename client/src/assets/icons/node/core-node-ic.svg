@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="30px" viewBox="0 0 33 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 52</title>
+    <g id="Core" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-39" transform="translate(-16.000000, -39.000000)">
+            <g id="Group-52" transform="translate(17.000000, 39.000000)">
+                <g id="Group-51" transform="translate(5.000000, 0.000000)" fill="#A878FD">
+                    <path d="M21,0 C23.209139,-4.05812251e-16 25,1.790861 25,4 L25,10 C25,12.209139 23.209139,14 21,14 L9,14 C6.790861,14 5,12.209139 5,10 L5,4 C5,1.790861 6.790861,4.05812251e-16 9,0 L21,0 Z M21,2 L9,2 C7.8954305,2 7,2.8954305 7,4 L7,4 L7,10 C7,11.1045695 7.8954305,12 9,12 L9,12 L21,12 C22.1045695,12 23,11.1045695 23,10 L23,10 L23,4 C23,2.8954305 22.1045695,2 21,2 L21,2 Z" id="Combined-Shape"></path>
+                    <rect id="Rectangle" x="7" y="4" width="16" height="2"></rect>
+                    <path d="M17,16 C19.209139,16 21,17.790861 21,20 L21,26 C21,28.209139 19.209139,30 17,30 L6,30 C3.790861,30 2,28.209139 2,26 L2,20 C2,17.790861 3.790861,16 6,16 L17,16 Z M17,18 L6,18 C4.8954305,18 4,18.8954305 4,20 L4,20 L4,26 C4,27.1045695 4.8954305,28 6,28 L6,28 L17,28 C18.1045695,28 19,27.1045695 19,26 L19,26 L19,20 C19,18.8954305 18.1045695,18 17,18 L17,18 Z" id="Combined-Shape"></path>
+                    <rect id="Rectangle" x="4" y="20" width="16" height="2"></rect>
+                    <circle id="Oval" stroke="#2D2C30" cx="20" cy="23" r="2.5"></circle>
+                    <circle id="Oval" stroke="#2D2C30" cx="24" cy="7" r="2.5"></circle>
+                    <circle id="Oval" stroke="#2D2C30" cx="3" cy="23" r="2.5"></circle>
+                    <circle id="Oval" stroke="#2D2C30" cx="6" cy="7" r="2.5"></circle>
+                </g>
+                <path d="M11,7 L5.81494141,7 C2.48160807,6.71207682 0.814941406,9.37874349 0.814941406,15 C0.814941406,20.6212565 2.48160807,23.2879232 5.81494141,23" id="Path-19" stroke="#A878FD" stroke-width="2" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

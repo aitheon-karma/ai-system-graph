@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "../dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "../node_modules/@aitheon/core-server/types/*",
+        "server/types/*"
+      ]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noEmitHelpers": true
+  },
+  "include": [
+    "**/*"
+  ],
+  "exclude": [
+    "modules/sockets/generated/**/*"
+  ]
+}

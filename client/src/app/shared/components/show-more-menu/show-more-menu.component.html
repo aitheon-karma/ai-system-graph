@@ -1,0 +1,13 @@
+<div class="show-more-menu"
+     aiClickOutside
+     (clickedOutside)="close()">
+    <div class="icon icon--more icon--white icon--dynamic"
+         [class.icon--size-16px]="small"
+        (click)="toggle()"></div>
+    <div class="show-more-menu__list"
+         *ngIf="isOpened">
+        <div class="show-more-menu__list-item"
+             (click)="onItemSelect(item.key, $event)"
+            *ngFor="let item of items">{{ item.label }}</div>
+    </div>
+</div>

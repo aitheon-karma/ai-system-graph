@@ -1,0 +1,212 @@
+<ng-template #settingsModal>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Configurations for the {{ nodeData?.name || 'Node' }}</h4>
+        <button type="button"
+                class="icon icon--close icon--dynamic icon--size-24px"
+                (click)="hide($event)"
+                aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body settings-modal__body"
+         *ngIf="nodeData">
+        <div class="settings-modal__tabs">
+            <ng-container *ngFor="let tab of tabs">
+                <div class="settings-modal__tab"
+                     [class.settings-modal__tab--error]="submitted && (
+                         tab.key === tabTypes.PARAMETERS && !paramsForm ?.valid ||
+                         tab.key === tabTypes.TICKS && !ticksForm ?.valid ||
+                         tab.key === tabTypes.PROVISIONAL && !templateForm ?.valid ||
+                         tab.key === tabTypes.IO_SETTINGS && !templateForm ?.valid ||
+                         tab.key === tabTypes.IO_SETTINGS && !ioFormData?.isValid
+                     )"
+                     [class.settings-modal__tab--active]="activeTab === tab.key"
+                     *ngIf="
+                        !isSubgraph && !isServiceNode && tab.key === tabTypes.PARAMETERS ||
+                        tab.key === tabTypes.TICKS && ticksControlsArray ?.length ||
+                        nodeData.type === 'TEMPLATE_NODE' && tab.key === tabTypes.PROVISIONAL ||
+                        nodeData.type !== 'TEMPLATE_NODE' && tab.key === tabTypes.IO_SETTINGS
+                     "
+                     (click)="switchTab($event, tab.key)">
+                    {{ tab.label }} {{ tab.key === tabTypes.PROVISIONAL && templateForm ? 'Settings' : '' }}
+                </div>
+            </ng-container>
+        </div>
+        <div [ngSwitch]="activeTab" class="d-flex flex-column flex-grow-1">
+            <div class="settings-modal__loader"
+                 *ngIf="loading && (activeTab === tabTypes.PROVISIONAL || activeTab === tabTypes.IO_SETTINGS)">
+                <ai-loading></ai-loading>
+            </div>
+            <ng-container *ngSwitchCase="tabTypes.TICKS">
+                <div class="settings-modal__section p--16"
+                     *ngIf="ticksForm">
+                    <form [formGroup]="ticksForm">
+                        <ng-container formArrayName="ticks"
+                                      *ngFor="let tick of ticksControlsArray.controls; let i = index">
+                            <div class="settings-modal__input-container"
+                                 [formGroupName]="i">
+                                <div class="settings-modal__input-label">
+                                    <label class="switch settings-modal__tick-switch"
+                                           [aiTooltip]="!tick.get('enabled').value ? 'Enable Tick' : 'Disable Tick'">
+                                        <input class="switch__input"
+                                               name="tick-switch"
+                                               formControlName="enabled"
+                                               type="checkbox"
+                                               tabindex="1">
+                                        <span class="switch__toggle"></span>
+                                    </label>
+                                    {{ tick.get('name').value }}
+                                </div>
+                                <div [class.input-wrap--error]="submitted && tick.get('enabled').value && !tick.get('interval').valid"
+                                     class="input-wrap input-wrap--contained input-wrap--small flex-grow-1">
+                                    <input class="input-wrap__input"
+                                           type="text"
+                                           autocomplete="off"
+                                           [disableControl]="disabled || !tick.get('enabled').value"
+                                           formControlName="interval"
+                                           placeholder="Interval">
+                                    <div class="input-wrap__icon-error icon icon--attention parent-tt"
+                                         [aiTooltip]="tick.get('interval').hasError('required') ? 'Interval is required' : 'Interval must be a positive number'">
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </form>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="tabTypes.PARAMETERS">
+                <div class="settings-modal__section p--16"
+                     *ngIf="paramsForm && (allowEditParameters || paramsControlsArray.controls.length); else emptyMessage">
+                    <form [formGroup]="paramsForm">
+                        <ng-container formArrayName="parameters"
+                                      *ngFor="let param of paramsControlsArray.controls; let i = index">
+                            <div class="settings-modal__input-container"
+                                 [formGroupName]="i">
+                                <ng-container *ngIf="!allowEditParameters; else paramsEdit">
+                                    <div class="settings-modal__input-label">
+                                        {{ param.get('name').value }}
+                                    </div>
+                                    <ng-container *ngIf="!param.get('isBot').value; else botDropdown">
+                                        <div [class.input-wrap--error]="getErrorMessage(param)"
+                                             class="input-wrap input-wrap--contained input-wrap--small flex-grow-1">
+                                            <input class="input-wrap__input"
+                                                   type="text"
+                                                   autocomplete="off"
+                                                   [disableControl]="param.get('name').value === 'tick' && !param.get('enabled').value"
+                                                   formControlName="value"
+                                                   [placeholder]="param.get('name').value || 'Property value'">
+                                            <div class="input-wrap__icon-error icon icon--attention parent-tt"
+                                                 [title]="getErrorMessage(param)">
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #botDropdown>
+                                        <ng-select class="dropdown dropdown--contained"
+                                                   [class.dropdown--error]="submitted && !param.get('value').valid"
+                                                   [items]="bots"
+                                                   bindLabel="username"
+                                                   bindValue="username"
+                                                   [clearable]="false"
+                                                   formControlName="value"
+                                                   placeholder="Bot">
+                                        </ng-select>
+                                    </ng-template>
+                                </ng-container>
+                                <ng-template #paramsEdit>
+                                    <div class="template-settings__input-wrap template-settings__io-wrap--width-40 pr--16">
+                                        <label [class.error]="submitted &&!param.get('name').valid">Name</label>
+                                        <div class="input-wrap input-wrap--contained input-wrap--small"
+                                             [class.input-wrap--error]="submitted &&!param.get('name').valid">
+                                            <input type="text"
+                                                   placeholder="Parameter Name"
+                                                   class="input-wrap__input"
+                                                   formControlName="name">
+                                        </div>
+                                    </div>
+                                    <div class="template-settings__input-wrap template-settings__io-wrap template-settings__io-wrap--small pr--16">
+                                        <label>Mandatory</label>
+                                        <ng-select class="dropdown dropdown--contained"
+                                                   [items]="mandatoryItems"
+                                                   bindLabel="label"
+                                                   bindValue="value"
+                                                   [clearable]="false"
+                                                   formControlName="mandatory"
+                                                   placeholder="Mandatory">
+                                        </ng-select>
+                                    </div>
+                                    <div class="template-settings__input-wrap template-settings__io-wrap--width-40">
+                                        <label [class.error]="submitted &&!param.get('value').valid">Value</label>
+                                        <div class="input-wrap input-wrap--contained input-wrap--small"
+                                             [class.input-wrap--error]="submitted &&!param.get('value').valid">
+                                            <input type="text"
+                                                   placeholder="Parameter Value"
+                                                   class="input-wrap__input"
+                                                   formControlName="value">
+                                        </div>
+                                    </div>
+                                    <div class="icon icon--delete icon--dynamic mt--16 ml--8"
+                                         *ngIf="!disabled"
+                                         (click)="removeParameter($event, i)"></div>
+                                </ng-template>
+                            </div>
+                        </ng-container>
+                    </form>
+                    <div class="icon icon--plus icon--dynamic"
+                         *ngIf="!disabled && allowEditParameters"
+                         (click)="addParameter($event)"></div>
+                </div>
+                <ng-template #emptyMessage>
+                    <div class="settings-modal__empty-message">
+                        There are no parameters for this node
+                    </div>
+                </ng-template>
+            </ng-container>
+            <ng-container *ngSwitchCase="selectedTemplateTab">
+                <div class="settings-modal__section p--16">
+                    <form [formGroup]="templateForm"
+                          *ngIf="templateForm">
+                        <div class="template-settings__input-wrap"
+                             *ngIf="!!templateForm.get('name')">
+                            <label [class.error]="submitted && !templateForm.get('name').valid">Name {{ submitted && !templateForm.get('name').valid ? 'is required!' : '' }}</label>
+                            <div class="input-wrap input-wrap--contained input-wrap--small"
+                                 [class.input-wrap--error]="submitted && !templateForm.get('name').valid">
+                                <input type="text"
+                                       class="input-wrap__input"
+                                       formControlName="name">
+                            </div>
+                        </div>
+                        <div class="template-settings__input-wrap"
+                             *ngIf="!!templateForm.get('description')">
+                            <label>Description</label>
+                            <div class="textarea-wrap textarea-wrap--contained">
+                                <textarea class="textarea-wrap__textarea"
+                                          placeholder="Description"
+                                          formControlName="description"
+                                          rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+
+                    <ai-io-settings-form [submitted]="submitted"
+                                         (formChange)="onIoFormChange($event)"
+                                         [outputs]="formOutputs"
+                                         [allowAddIo]="isSubgraph || isProvisionalNode"
+                                         [inputs]="formInputs"></ai-io-settings-form>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="modal-footer d-flex">
+        <button class="button button--medium button--ghost mr-2 m-0"
+                type="button"
+                (click)="hide()">
+            close
+        </button>
+        <button class="button button--medium button--contained m-0"
+                *ngIf="!disabled"
+                [disabled]="submitted && !formsValid"
+                type="button"
+                (click)="onSaveSettings($event)">
+            save
+        </button>
+    </div>
+</ng-template>

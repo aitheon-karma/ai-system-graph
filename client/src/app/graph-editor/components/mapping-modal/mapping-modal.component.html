@@ -1,0 +1,130 @@
+<ng-template #modalView>
+    <div class="modal-header mapping-modal__header">
+        <h4 class="modal-title">
+            Mapping from {{ '"' + (data?.outputNodeData?.name || outputNode?.nodeName) + '"' }} to {{
+          data?.inputNodeData?.name ? '"' + data?.inputNodeData?.name + '"' : (inputNodes | stringifyArray: ',': 'nodeName': '"') }}
+        </h4>
+
+        <div class="mapping-modal__header-right-side">
+            <button type="button"
+                    *ngIf="hasConnections"
+                    class="button--ghost button button--medium mapping-modal__clear-all"
+                    (click)="clearConnections()">
+                clear all connections
+            </button>
+
+            <button type="button"
+                    class="icon icon--close icon--dynamic icon--size-24px"
+                    (click)="hide($event)"
+                    aria-label="Close">
+            </button>
+        </div>
+    </div>
+    <div class="modal-body mapping-modal__body">
+        <div class="mapping-modal__compatible-message"
+             *ngIf="!isCompatibleMessageClosed && !isLoading && !hasConnections && selectedOutput?.socket && selectedInput?.socket && selectedInput.socket === selectedOutput.socket">
+            <span>
+                All connections in this mapping are compatible. Do you want to connect all of them?
+            </span>
+            <div class="d-flex align-items-center">
+                <button class="button button--small button--ghost mr--8"
+                        (click)="connectAll()">
+                    connect all
+                </button>
+                <span class="icon icon--close icon--white icon--dynamic"
+                      (click)="closeCompatibleMessage()"></span>
+            </div>
+        </div>
+        <div class="mapping-modal__content"
+             (wheel)="onContentScroll($event, leftPropertiesSection, rightPropertiesSection)">
+
+            <ai-loading *ngIf="isLoading"
+                        class="mapping-modal__loader"></ai-loading>
+
+            <div class="mapping-modal__io-section">
+                <div class="mapping-modal__io-section-header">
+                    <span>{{ data?.outputNodeData?.name }}</span>
+                    <span>output (from)</span>
+                </div>
+
+                <div class="mapping-modal__io-properties-wrap mapping-modal__io-properties-wrap--left"
+                     #leftPropertiesSection
+                     (scroll)="onSectionScroll('output')">
+                    <div class="mapping-modal__io-properties mapping-modal__io-properties--left">
+                        <div #outputsSelectorViewRef>
+                            <ai-io-selector [ioType]="ioType.OUTPUT"
+                                            [io]="[outputNode]"
+                                            (ioSelected)="onIoSelect($event)"></ai-io-selector>
+                        </div>
+
+                        <ng-container *ngIf="!isOutputsLoading">
+                            <ai-io-property *ngFor="let property of outputProperties; let i = index"
+                                            [isLast]="i === outputProperties?.length - 1"
+                                            [ioType]="ioType.OUTPUT"
+                                            [parentReference]="outputsSelectorViewRef"
+                                            [property]="property"></ai-io-property>
+                        </ng-container>
+
+                        <div class="mapping-modal__io-custom-fields"
+                             *ngIf="outputProperties?.length">
+                            <div class="mapping-modal__custom-fields-title">Custom Fields</div>
+
+                            <ai-io-property *ngFor="let property of customProperties; let i = index"
+                                            [ioType]="ioType.OUTPUT"
+                                            (removeProperty)="removeProperty(i)"
+                                            [property]="property"></ai-io-property>
+
+                            <ai-add-custom-property (typeSelected)="addCustomField($event)"></ai-add-custom-property>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mapping-modal__from-to-arrow"></div>
+
+            <div class="mapping-modal__io-section">
+                <div class="mapping-modal__io-section-header">
+                    <span>{{ data?.inputNodeData?.name }}</span>
+                    <span>input (to)</span>
+                </div>
+
+                <div class="mapping-modal__io-properties-wrap mapping-modal__io-properties-wrap--right"
+                     #rightPropertiesSection
+                     (scroll)="onSectionScroll('input')">
+                    <div class="mapping-modal__io-properties mapping-modal__io-properties--right">
+                        <div #inputsSelectorViewRef>
+                            <ai-io-selector [ioType]="ioType.INPUT"
+                                            [io]="inputNodes"
+                                            [isIoHasConnection]="!inputChanged && !!outputConnections.length"
+                                            (ioChangeApproved)="inputChanged = true"
+                                            (ioSelected)="onIoSelect($event)"></ai-io-selector>
+                        </div>
+
+                        <ng-container *ngIf="!isInputsLoading">
+                            <ai-io-property *ngFor="let property of inputProperties; let i = index"
+                                            [isLast]="i === inputProperties?.length - 1"
+                                            [ioType]="ioType.INPUT"
+                                            [parentReference]="inputsSelectorViewRef"
+                                            [property]="property"></ai-io-property>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+
+            <div class="icon icon--delete icon--dynamic icon--size-16px mapping-modal__connection-remove"
+                 [ngStyle]="getButtonCoordinates(connection)"
+                 (click)="removeConnection($event, connection)"
+                 *ngFor="let connection of (selectedConnections$ | async)"></div>
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex">
+        <button class="button button--medium button--ghost mr-2 m-0"
+                type="button"
+                (click)="hide($event)">close
+        </button>
+        <button type="button" class="button button--medium button--contained m-0"
+                (click)="save()">save
+        </button>
+    </div>
+</ng-template>

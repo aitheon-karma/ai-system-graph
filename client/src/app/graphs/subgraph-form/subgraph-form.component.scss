@@ -1,0 +1,16 @@
+.subgraph-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    &__input-wrap {
+        margin-right: 24px;
+        width: 360px;
+
+        &--runtime {
+            width: 200px;
+            margin-right: unset;
+        }
+    }
+}

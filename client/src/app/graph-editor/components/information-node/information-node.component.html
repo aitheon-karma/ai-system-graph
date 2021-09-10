@@ -1,0 +1,21 @@
+<div class="information-node"
+     #nodeView
+     (pointerdown)="onDragStart($event)"
+     (pointerup)="onPointerUp()"
+     (contextmenu)="onRightClick($event)">
+    <div class="textarea-wrap textarea-wrap--contained information-node__input-wrap"
+         *ngIf="node.data.type === nodeType.TEXTAREA">
+        <textarea class="textarea-wrap__textarea information-node__text"
+                  placeholder="Write some text ..."
+                  [rows]="rows"
+                  [cols]="cols"
+                  [formControl]="control"></textarea>
+    </div>
+
+    <div class="information-node__context-menu"
+         *ngIf="showContextMenu"
+         [ngStyle]="contextMenuPosition">
+        <div class="information-node__context-menu-item"
+             (click)="onNodeDelete()">Delete {{ nodeData.type === nodeType.TEXTAREA ? 'Textbox' : 'Image' }}</div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ${NAME}
+  labels:
+    app: ${NAME}
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${NAME}
+    spec:
+      containers:
+      - env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: shared-config
+              key: MONGODB_URI
+        - name: DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: shared-config
+              key: DOMAIN
+        - name: MAILER_FROM
+          valueFrom:
+            secretKeyRef:
+              name: shared-config
+              key: MAILER_FROM
+        - name: NODE_ENV
+          value: production
+        envFrom:
+         - configMapRef:
+             name: ${NAME}
+        image: ${FULL_IMAGE_NAME}
+        imagePullPolicy: "Always"
+        name: ${NAME}
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          httpGet: # make an HTTP request
+            port: 3000 # port to use
+            path: /api # endpoint to hit
+            scheme: HTTP # or HTTPS
+          initialDelaySeconds: 30 # how long to wait before checking
+          periodSeconds: 3 # how long to wait between checks
+          successThreshold: 1 # how many successes to hit before accepting
+          failureThreshold: 3 # how many failures to accept before failing
+          timeoutSeconds: 1 # how long to wait for a response

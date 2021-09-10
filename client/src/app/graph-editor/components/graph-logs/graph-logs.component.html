@@ -1,0 +1,34 @@
+<div class="graph-logs"
+    aiClickOutside
+    (clickedOutside)="onOutsideClick()">
+    <div class="graph-logs__content"
+        [class.graph-logs__content--show]="show"
+        [class.graph-logs__content--hide]="!show">
+        <div class="graph-logs__header">
+            <div class="graph-logs__title">{{ graph ?.name }} build</div>
+            <div>
+                <!-- <button type="button"
+                    class="icon icon--update icon--dynamic mr--24"
+                    (click)="refresh($event)"
+                    [class.icon--active]='isRefreshing'>
+                </button> -->
+                <button type="button"
+                    class="icon icon--close icon--dynamic icon--size-24px"
+                    (click)="toggleShow($event)"
+                    aria-label="Close">
+                </button>
+            </div>
+        </div>
+        <div class="graph-logs__log-container">
+            <ai-loading *ngIf="loading"></ai-loading>
+            <div class="graph-logs__logs"
+                [class.graph-logs__logs--hidden]="loading"
+                #logsContainer>
+                <div *ngFor="let log of logs"
+                    [class.text-warning]="log.stream === 'stderr'">
+                    [{{ log.graphNodeName }}] ({{ log.timestamp | date: 'hh:mm:ss' }}) {{ log.log }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

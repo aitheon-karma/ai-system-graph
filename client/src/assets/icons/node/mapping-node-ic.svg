@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="47px" height="24px" viewBox="0 0 47 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>EC72FAB9-144C-4E78-B163-765ED484DDA0@1.00x</title>
+    <g id="Core" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="29-Blueprints-/-01_04_Breadcrumbs" transform="translate(-608.000000, -346.000000)">
+            <g id="Group-2" transform="translate(590.000000, 314.000000)">
+                <g id="Group-10" transform="translate(18.000000, 32.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="47" height="24"></rect>
+                    <g id="Group-9" transform="translate(4.000000, 2.000000)" stroke="#DCBC65" stroke-linecap="round">
+                        <g id="Group-8" transform="translate(0.000000, 2.058824)" stroke-width="2">
+                            <path d="M0,0.0382570317 C3.73262899,-0.178005462 6.84401539,0.522611846 9.3341592,2.14010896 C11.613548,3.62070812 14.1252486,5.74392506 16.869261,8.50975975 C20.7050979,12.3761019 24.6480848,14.8265741 28.6982217,15.8611764 C31.0948771,16.473399 34.7742803,16.2762121 39.7364315,15.2696158" id="Path-11"></path>
+                            <polyline id="Path-12" stroke-linejoin="round" points="38.0238184 14.2275124 40.1308585 15.0787242 38.5177845 16.8996514"></polyline>
+                        </g>
+                        <g id="Group-7" transform="translate(5.530980, 0.000000)">
+                            <path d="M0,2.12615895 C3.49132849,1.75761758 8.74142467,6.27646516 11.4074693,8.96752918 C15.6201687,13.2197624 20.0309453,15.7162543 24.5021222,16.5481381" id="Path-11" stroke-dasharray="3" transform="translate(12.251061, 9.326540) scale(1, -1) translate(-12.251061, -9.326540) "></path>
+                            <polyline id="Path-12" stroke-linejoin="round" transform="translate(23.488958, 2.462104) rotate(12.000000) translate(-23.488958, -2.462104) " points="22.2305455 0.57264446 24.7473714 1.39454078 23.6923552 4.35156304"></polyline>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

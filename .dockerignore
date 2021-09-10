@@ -1,0 +1,14 @@
+.git
+.gitignore
+README.md
+docker-compose.yml
+local-compose.yml
+node_modules
+client/node_modules
+logs
+dist
+k8s
+telepresence.log
+.env
+client/dist
+dist-libs

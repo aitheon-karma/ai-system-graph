@@ -1,0 +1,32 @@
+<div class="service-items__wrap">
+    <div class="service-items"
+         *ngIf="!loading; else loader">
+        <div class="service-items__title">Service Items</div>
+        <div class="service-items__list"
+             *ngIf="serviceItems">
+            <div class="service-items__list-item"
+                 *ngFor="let item of serviceItems"
+                 (click)="onItemClick($event, item._id)">
+                <div class="service-items__list-item-title">{{ item.name }}</div>
+                <div class="infrastructure__address" *ngIf="serviceId==='SMART_INFRASTRUCTURE'">{{item?.location?.address?.addressLine1 || 'Address not available'}}</div>
+                <div class="service-items__list-item-content"
+                    [class.service-items__list-item-content--transparent]="item.logo">
+                    <div class="service-items__list-item-preview"
+                         *ngIf="!item.logo; else itemLogo">
+                        <div class="icon icon--image mb--8"></div>
+                        <div class="service-items__list-item-preview-text">Image Cover</div>
+                    </div>
+                    <ng-template #itemLogo>
+                        <img [src]="item.logo" alt="Location" class="service-items__list-item-img">
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <div class="service-items__loader">
+            <ai-loading></ai-loading>
+        </div>
+    </ng-template>
+</div>

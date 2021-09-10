@@ -1,0 +1,49 @@
+<ng-template #releasesModal>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Releases</h4>
+        <button type="button"
+            class="icon icon--close icon--dynamic icon--size-24px"
+            (click)="hide()"
+            aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="releasesForm"
+            *ngIf="releasesForm">
+            <div class="training-modal__input-container">
+                <div class="training-modal__input-label">
+                    Releases
+                </div>
+                <ng-select class="dropdown dropdown--contained"
+                    [items]="releases"
+                    [multiple]="false"
+                    placeholder="Select release"
+                    formControlName="release"
+                    [bindValue]="_id"
+                    bindLabel="tag"
+                    [searchable]="false"
+                    [clearable]='false'>
+                    <ng-template ng-option-tmp
+                        let-item="item"
+                        let-index="index"
+                        let-search="searchTerm">
+                        <div class="item item--avatar-text">
+                            {{item.tag}}
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button class="button button--medium button--ghost mr-2 m-0"
+            type="button"
+            (click)="hide()">close
+        </button>
+        <button class="button button--medium button--contained m-0"
+            [disabled]="releasesForm && !releasesForm.valid"
+            type="button"
+            (click)="onSave($event)">save
+        </button>
+    </div>
+</ng-template>

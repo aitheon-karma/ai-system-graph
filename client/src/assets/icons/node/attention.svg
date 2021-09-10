@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon / 24-cont / info / info-24</title>
+    <defs>
+        <path d="M12,2 L22,22 L2,22 L12,2 Z M12,6 L5.2175293,20 L18.8703613,20 L12,6 Z M12,13 C12.5522847,13 13,13.4477153 13,14 L13,18 C13,18.5522847 12.5522847,19 12,19 C11.4477153,19 11,18.5522847 11,18 L11,14 C11,13.4477153 11.4477153,13 12,13 Z M12,10 C12.5522847,10 13,10.4477153 13,11 C13,11.5522847 12.5522847,12 12,12 C11.4477153,12 11,11.5522847 11,11 C11,10.4477153 11.4477153,10 12,10 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="42-User-profile-/-01_01_Notification_disabled" transform="translate(-126.000000, -138.000000)">
+            <g id="icon-/-24-cont-/-info-/-info-24" transform="translate(124.000000, 136.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#7E7E7E" xlink:href="#path-1"></use>
+                <g id="Group" mask="url(#mask-2)" fill="#E96058">
+                    <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                        <rect id="Additional-Colors-/-Filled-/-$base-red" x="0" y="0" width="24" height="24"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

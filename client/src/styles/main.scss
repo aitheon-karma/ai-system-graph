@@ -1,0 +1,456 @@
+$grid-size: 28px;
+$dark-color: #2b2b2b;
+$transparent-gold-color: rgba(220, 188, 101, 0.10);
+$th: 0.008;
+$grid-color: #1e1e1e;
+$socket-size: 10px;
+$pin-size: 16px;
+
+html {
+  .container {
+    max-width: 1224px !important;
+  }
+}
+
+// GRAPH EDITOR STYLES
+
+@function line($dir, $t, $w, $color) {
+  $start: $grid-size * $t - $w * $grid-size;
+  $end: $grid-size * $t + $w * $grid-size;
+  @return linear-gradient(to $dir, transparent $start, $color $start, $color $end, transparent $end)
+}
+
+//@media (min-width: 576px) {
+//  .modal-dialog:not(.mapping-modal) {
+//    max-width: 500px !important;
+//  }
+//}
+
+.graph-editor-background {
+  &--gold {
+    display: block;
+    z-index: -2 !important;
+    background-size: $grid-size $grid-size;
+    background-color: $grid-color;
+    box-sizing: border-box;
+    background-image: line(right, 0, $th * 7, $transparent-gold-color), line(bottom, 0, $th * 7, $transparent-gold-color);
+  }
+}
+
+.node-editor {
+  div.pin {
+    background: #dcbc65 !important;
+    width: $pin-size !important;
+    height: $pin-size !important;
+  }
+
+  .connection .main-path__channel {
+    stroke-width: 7px !important;
+    stroke-dasharray: 3px !important;
+  }
+}
+
+// END OF GRAPH EDITOR STYLES
+
+.modal-header {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.modal-footer {
+  padding-top: 8px;
+  padding-bottom: 8px;
+
+  * {
+    margin: 0;
+  }
+}
+
+.modal-body {
+
+  .color-picker {
+    position: relative;
+    background-color: #2b2b2b;
+    border: 1px solid #454545;
+
+    input {
+      width: 100%;
+      color: transparent;
+      cursor: pointer;
+      top: -1px;
+    }
+
+    .arrow.arrow-bottom {
+      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #454545 rgba(0, 0, 0, 0);
+    }
+
+    .arrow.arrow-top {
+      border-color: #454545 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    }
+
+    .cmyk-text .box,
+    .hsla-text .box,
+    .rgba-text .box,
+    .hex-text .box {
+
+      div {
+        color: #7e7e7e;
+      }
+
+      input {
+        background-color: #1f1f1f;
+        color: #8c8c8c;
+        border: #454545 solid 1px;
+      }
+    }
+  }
+}
+
+.error {
+  color: #E96058;
+}
+
+.ng-select {
+
+  &.ng-select-disabled {
+
+    .ng-select-container {
+      background-color: #2b2b2b;
+    }
+  }
+}
+
+// ai-tooltip styles
+.ng-tooltip {
+  position: fixed;
+  min-width: 80px;
+  max-width: 300px;
+  font-size: 14px;
+  text-align: center;
+  color: #eee;
+  padding: 3px 8px;
+  background: rgba(#1f1f1f, 0.95);
+  border-radius: 4px;
+  z-index: 4000;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.5);
+}
+
+.ng-tooltip:after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+}
+
+.ng-tooltip-top:after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: rgba(#1f1f1f, 0.95) transparent transparent transparent;
+}
+
+.ng-tooltip-bottom:after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: transparent transparent rgba(#1f1f1f, 0.95) transparent;
+}
+
+.ng-tooltip-left:after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent transparent transparent rgba(#1f1f1f, 0.95);
+}
+
+.ng-tooltip-right:after {
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent rgba(#1f1f1f, 0.95) transparent transparent;
+}
+
+.ng-tooltip-show {
+  opacity: 1;
+}
+
+// ai-tooltip styles
+
+.custom-modal {
+  max-width: 840px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  transition: 0s !important;
+
+  &--small {
+    max-width: 560px;
+
+    .modal-body {
+      height: 642px !important;
+    }
+  }
+
+  &--medium {
+    max-width: 768px;
+
+    .modal-body {
+      height: 616px !important;
+    }
+  }
+
+  .modal-body {
+    height: 80vh;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      background-color: transparent !important;
+      width: 2px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #454545 !important;
+      border-radius: 4px !important;
+    }
+  }
+
+  .modal-footer {
+    padding: 8px 12px;
+  }
+}
+
+.mapping-modal {
+  @extend .custom-modal;
+  transition: .3s;
+  min-width: 1224px !important;
+  max-width: 1920px !important;
+  width: 80vw;
+
+  .mapping-modal__body {
+    svg {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: calc(80vh - 48px - 32px);
+      top: 64px;
+
+      path {
+        transition: opacity .3s ease-in-out, stroke .3s ease-in-out;
+      }
+    }
+
+    .io-property__dropdown {
+      .ng-select-container {
+        border: none;
+        background: #1f1f1f !important;
+      }
+
+      .ng-dropdown-panel {
+        z-index: 10002;
+      }
+    }
+
+    .io-property__info-section--custom {
+      input {
+        padding-left: 48px !important;
+      }
+
+      .ng-value-container {
+        padding-left: 32px !important;
+
+        input {
+          padding-left: 28px !important;
+        }
+      }
+    }
+  }
+}
+
+.dropdown .ng-dropdown-panel {
+
+  .ng-dropdown-panel-items {
+
+    &::-webkit-scrollbar {
+      background-color: transparent !important;
+      width: 2px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #454545 !important;
+      border-radius: 4px !important;
+    }
+  }
+}
+
+// NODE SETTINGS MODAL
+.template-settings__inputs-wrap.cdk-drag {
+  z-index: 4000 !important;
+}
+
+.template-settings__inputs-wrap.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+// NODE SETTINGS MODAL END
+
+
+.text-danger {
+  color: #e96058;
+}
+
+.ng-select-disabled {
+  .ng-select-container {
+    background: #1f1f1f !important;
+  }
+}
+
+// FONTS SECTION
+
+.font-size-12 {
+  font-size: 12px !important;
+}
+
+.font-size-10 {
+  font-size: 10px !important;
+}
+
+
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(#1f1f1f, 0.8);
+  z-index: 100000;
+}
+
+.color-picker {
+  z-index: inherit !important;
+
+  &.open {
+    z-index: 10000 !important;
+  }
+}
+
+gridster {
+  background: #2b2b2b !important;
+  padding: 0 24px !important;
+
+  &.padding-x-16px {
+    padding: 0 16px !important;
+  }
+
+  &.fixed {
+    overflow-x: hidden !important;
+  }
+}
+
+.gauge-chart__wrap {
+  .reading-block {
+    font-size: 28px !important;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    line-height: 30px;
+    color: var(--white) !important;
+  }
+}
+
+// Charts
+ngx-charts-line-chart,
+ngx-charts-bar-vertical-2d,
+ngx-combo-chart {
+
+  .tick {
+    fill: #7e7e7e !important;
+
+    &:hover {
+      fill: #7e7e7e !important;
+    }
+  }
+
+  .ngx-charts .gridline-path {
+    stroke: #454545 !important;
+  }
+
+  .chart-legend .legend-label {
+    display: inline-block;
+    width: 100px;
+  }
+
+  .chart-legend .legend-labels {
+    background: none;
+  }
+
+  .chart-legend .legend-label-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    color: #1a1a1a;
+  }
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.node {
+  &__subgraph-io {
+    z-index: 10 !important;
+  }
+}
+
+.type {
+  &--array {
+    background: url('~/assets/icons/array.svg') center center no-repeat;
+  }
+
+  &--date {
+    background: url('~/assets/icons/date.svg') center center no-repeat;
+  }
+
+  &--string {
+    background: url('~/assets/icons/string.svg') center center no-repeat;
+  }
+
+  &--object {
+    background: url('~/assets/icons/object.svg') center center no-repeat;
+  }
+
+  &--integer {
+    background: url('~/assets/icons/integer.svg') center center no-repeat;
+  }
+
+  &--boolean {
+    background: url('~/assets/icons/boolean.svg') center center no-repeat;
+  }
+}
+
+.disabled {
+  .tree-dropdown__content {
+    opacity: 0.4 !important;
+  }
+}
+
+.file-viewer-modal {
+  width: calc(100vw - 200px);
+  max-width: calc(100vw - 200px);
+  height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  transition: 0s !important;
+}

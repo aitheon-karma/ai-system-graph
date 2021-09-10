@@ -1,0 +1,141 @@
+.io-selector {
+  position: relative;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  background: #1f1f1f;
+  display: flex;
+  color: var(--white);
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: .2s ease-in-out;
+
+  &:hover,
+  &--opened {
+    border: 1px solid #dcbc65;
+  }
+
+  &__value {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  &__placeholder {
+    color: var(--gray);
+  }
+
+  &__icon {
+    height: 12px;
+    width: 8px;
+    background: url('~/assets/icons/action-ic.svg') center center no-repeat;
+    background-size: cover;
+    margin-right: 16px;
+  }
+
+  &__icon-drop-down {
+    transition: .2s ease-in-out;
+  }
+
+  &__icon-drop-up {
+    transform: rotate(180deg);
+  }
+
+  &__dropdown {
+    left: 0;
+    top: 50px;
+    position: absolute;
+    padding: 16px 2px 4px 24px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2px;
+    width: 100%;
+    background: #383838;
+    z-index: 10;
+  }
+
+  &__io-search {
+    margin-right: 22px;
+    width: auto !important;
+    display: flex;
+    flex-grow: 1;
+
+    .search-container__input {
+      width: auto !important;
+      display: flex;
+      flex-grow: 1;
+    }
+  }
+
+  &__empty-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: normal;
+    padding-bottom: 24px;
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+    padding-right: 22px;
+    overflow-y: auto;
+    max-height: 448px;
+  }
+
+  &__section {
+    flex-direction: column;
+    display: flex;
+
+    &:not(:first-child) {
+      margin-top: 24px;
+    }
+  }
+
+  &__section-title {
+    color: var(--white);
+    font-size: 10px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  &__io-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__io-list-item {
+    padding: 8px 16px;
+    background: #454545;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+    display: flex;
+    align-items: center;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+
+    &:hover,
+    &--selected {
+      background: #545454;
+    }
+
+    &--selected {
+      border: 1px solid #dcbc65;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+.mapping-node {
+  background: #2b2b2b;
+  border-radius: 2px;
+  width: 72px;
+  height: 40px;
+  position: relative;
+  cursor: grab;
+  display: flex;
+
+  &--dragging {
+    cursor: grabbing;
+  }
+
+  &__show-more {
+    position: absolute;
+    right: 4px;
+    top: -22px;
+  }
+
+  &__body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  &__icon {
+    height: 24px;
+    width: 48px;
+    background: url('~/assets/icons/node/mapping-node-ic.svg') center center no-repeat;
+    background-size: cover;
+  }
+
+  &__source,
+  &__target {
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    background: #454545;
+    border: 2px solid #1a1a1a;
+    cursor: crosshair;
+  }
+
+  &__source {
+    margin-left: -6px;
+  }
+
+  &__target {
+    margin-right: -6px;
+  }
+}

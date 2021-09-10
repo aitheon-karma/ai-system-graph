@@ -1,0 +1,129 @@
+<div class="node-preview__view"
+     [class.node-preview__view--height-auto]="!toolboxPreview">
+    <div class="node-preview__view-shadow"
+         *ngIf="toolboxPreview && ((node?.inputs ?.length > 2 || node?.outputs ?.length > 2) ||
+            (node?.type === itemType.TEMPLATE_NODE || node?.templateVariables ?.inference ?.enabled) &&
+            (node?.inputs ?.length >= 2 || node?.outputs ?.length >= 2))"></div>
+    <div class="node-preview__node"
+         [ngStyle]="styles"
+         [draggable]="toolboxPreview"
+         (dragstart)="toolboxPreview ? onDragStart($event, node) : null"
+         [class.node-preview__node--textarea]="node?.type === itemType.TEXTAREA"
+         [class.node-preview__node--sub-graph]="node?.type === itemType.SUBGRAPH"
+         [class.node-preview__node--provisional]="node?.type === itemType.TEMPLATE_NODE"
+         [class.node-preview__node--core]="node?.type === itemType.CORE_NODE"
+         [class.node-preview__node--dashboard]="node?.type === itemType.USER_NODE && isDashboardApplication"
+         [class.node-preview__node--application]="node?.type === itemType.USER_NODE && isApplication"
+         [class.node-preview__node--robot]="node?.type === itemType.USER_NODE  && isRobotAppNode"
+         [class.node-preview__node--automation]="node?.type === itemType.USER_NODE && isAutomation"
+         [class.node-preview__node--user]="node?.type === itemType.USER_NODE && 
+                                           !node?.storeRequest?.nodeStyling && !isDashboardApplication && !isApplication && !isAutomation && !isRobotAppNode"
+         [class.node-preview__node--inactive]="!toolboxPreview"
+         [class.node-preview__node--small]="size == 'small'"
+         [class.node-preview__node--medium]="size == 'medium'"
+         [class.node-preview__node--position-static]="!toolboxPreview ">
+        <ng-container *ngIf="node?.type !== itemType.TEXTAREA; else textbox">
+            <div class="node-preview__header"
+                 [class.node-preview__header--subgraph-template]="node?.type === itemType.TEMPLATE"
+                 [class.node-preview__header--subgraph]="node?.type === itemType.SUBGRAPH || node?.type === itemType.TEMPLATE_NODE">
+                <div class="node-preview__header-background"
+                     [class.node-preview__header-background--provisional-node]="node?.type === itemType.TEMPLATE_NODE">
+
+                </div>
+                <div class="node-preview__header-left-side">
+                    <div    class="node-preview__icon service-icon"
+                            [class.system_graph]="node?.type === itemType.CORE_NODE"></div>
+                    <div class="d-flex flex-column">
+                        <div class="node-preview__title ellipsis">{{ node?.name }}</div>
+                        <div class="node-preview__title--dark node-preview__title--uppercase ellipsis">
+                            {{ node?.type === itemType.TEMPLATE ? 'subgraph template' : node?.name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="node-preview__header-right-side">
+                    <img [src]="logoUrl"
+                         *ngIf="logoUrl"
+                         class="node-preview__logo"
+                         alt="Node Logo">
+                    <div class="icon icon--more icon--white"
+                         [class.icon--dynamic]="node?.type === itemType.TEMPLATE"
+                         (click)="toggleMore($event)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="io-preview">
+                <div class="io-preview__io io-preview__io--left">
+                    <div class="io-preview__socket" aiTooltip="{{ getIOData(inputs) }}" *ngIf="inputs?.length">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron io-preview__socket-chevron--in icon--chevron-left" >
+                        </div>
+                        <div class="io-preview__io-title">{{ inputs?.length  }} {{ inputs?.length > 1 ? 'Inputs' : 'Input' }}</div>
+                    </div>
+                    <!-- <div class="io-preview__io-title"></div>
+                    <div class="io-preview__socket">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron io-preview__socket-chevron--in icon--chevron-left"></div>
+                    </div> -->
+                </div>
+                <div class="io-preview__io io-preview__io--right" aiTooltip="{{ getIOData(outputs) }}" *ngIf="outputs?.length">
+                    <div class="io-preview__socket io-preview__socket--reverse">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron io-preview__socket-chevron--out icon--chevron-right" >
+                        </div>
+                        <div class="io-preview__io-title">{{ outputs?.length }} {{ outputs?.length > 1 ? 'Outputs' : 'Output' }}</div>
+                    </div>
+                    <!-- <div class="io-preview__io-title"></div>
+                    <div class="io-preview__socket">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron io-preview__socket-chevron--in icon--chevron-right"></div>
+                    </div> -->
+                </div>
+                <!-- <div class="io-preview__io"
+                     [class.io-preview__io--left]="io.placement === placements.LEFT"
+                     [class.io-preview__io--right]="io.placement === placements.RIGHT"
+                     [class.io-preview__io--center]="io.placement === placements.CENTER"
+                     *ngFor="let io of ioItems">
+                    <div class="io-preview__socket"
+                         [class.io-preview__socket--reverse]="io.placement === placements.RIGHT">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron"
+                             [class.io-preview__socket-chevron--in]="io.type === 'INPUT'"
+                             [class.io-preview__socket-chevron--out]="io.type === 'OUTPUT'"
+                             [class.icon--chevron-right]="io.placement === placements.LEFT && io.type === 'INPUT' ||
+                                io.placement === placements.RIGHT && io.type === 'OUTPUT' ||
+                                io.placement === placements.CENTER && io.type === 'INPUT'"
+                             [class.icon--chevron-left]="io.placement === placements.RIGHT && io.type === 'INPUT' ||
+                                io.placement === placements.LEFT && io.type === 'OUTPUT' ||
+                                io.placement === placements.CENTER && io.type === 'OUTPUT'">
+                        </div>
+                        <div class="io-preview__io-title"
+                             *ngIf="io.placement !== placements.CENTER">{{ io.title | fileExtension }}</div>
+                    </div>
+                    <div class="io-preview__io-title"
+                         *ngIf="io.placement === placements.CENTER">{{ io.title | fileExtension }}</div>
+                    <div class="io-preview__socket"
+                         *ngIf="io.placement === placements.CENTER"
+                         [class.io-preview__socket--reverse]="true">
+                        <div class="io-preview__io-dot"></div>
+                        <div class="icon io-preview__socket-chevron"
+                             [class.io-preview__socket-chevron--in]="io.type === 'INPUT'"
+                             [class.io-preview__socket-chevron--out]="io.type === 'OUTPUT'"
+                             [class.icon--chevron-right]="io.type === 'OUTPUT'"
+                             [class.icon--chevron-left]="io.type === 'INPUT'">
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <!-- <div class="node-preview__model"
+                 *ngIf="node?.type === itemType.TEMPLATE_NODE || node?.templateVariables ?.inference ?.enabled">
+                <div class="node-preview__model-content">
+                    <div class="icon icon--plus icon--size-16px mr--4"></div>
+                    <div class="node-preview__model-text">Choose Model</div>
+                </div>
+            </div> -->
+        </ng-container>
+        <ng-template #textbox>Text Box</ng-template>
+    </div>
+</div>

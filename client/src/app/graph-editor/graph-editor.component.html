@@ -1,0 +1,57 @@
+<div class="graph-editor__wrapper graph-editor__background"
+     [class.graph-editor__background--gold]="graphsService.graphType === 'ORGANIZATION'"
+     (dragover)="allowDroppingNode($event)"
+     (drop)="onNodeDrop($event)">
+    <ai-graph-logs></ai-graph-logs>
+    <div #nodeEditor
+         class="node-editor"
+         [class.graph-editor__semi-transparent]="graphsService.graphType === 'LINKED'"></div>
+
+    <div class="graph-editor__controls">
+        <div class="controls__hint">
+            <div class="hint__text mr--16">Pro Hint:</div>
+            <ng-container *ngIf="showHint">
+                <div class="hint__text--dark mr--16">For delete connection you can select it and press</div>
+                <div class="hint__button">Backspace</div>
+                <div class="hint__text--dark ml--8 mr--8">or</div>
+                <div class="hint__button mr--16">Delete</div>
+            </ng-container>
+            <div class="icon icon--dynamic icon--{{ showHint ? 'close' : 'question-help' }}"
+                 (click)="toggleHint()"></div>
+        </div>
+
+        <div class="controls__zoom-buttons">
+          <span class="icon icon--minus icon--size-16px"
+                (click)="onZoomButtons('DECREASE')"></span>
+            <span class="icon icon--plus icon--size-16px"
+                  (click)="onZoomButtons('INCREASE')"></span>
+        </div>
+    </div>
+</div>
+<ai-toolbox></ai-toolbox>
+
+<ai-drive-uploader #driveUploader
+                   (failedUploadFile)="onUploadFail()"
+                   [autoUpload]="true"
+                   (success)="onSuccessUpload($event)"
+                   (afterAddingFile)="onAfterAddImage($event)"
+                   [oganizationId]="currentOrganization?._id"
+                   [service]="serviceKey">
+</ai-drive-uploader>
+
+<input #uploadFileInput
+       ng2FileSelect
+       id="upload-file"
+       name="upload-file"
+       class="upload-input"
+       type="file"
+       [uploader]="driveUploader?.uploader"
+       [accept]="allowedMimeType.toString()"/>
+
+<ai-node-settings></ai-node-settings>
+
+<ai-training-settings-modal #trainingSettingsModal></ai-training-settings-modal>
+<ai-releases-modal #releasesModal></ai-releases-modal>
+<ai-store-request-modal #requestModal></ai-store-request-modal>
+<ai-mapping-modal></ai-mapping-modal>
+<ai-file-viewer></ai-file-viewer>

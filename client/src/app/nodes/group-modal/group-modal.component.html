@@ -1,0 +1,84 @@
+<ng-template #modal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Add nodes group</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="close($event)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="groupForm"
+              *ngIf="groupForm">
+            <div class="modal-section mb--16">
+                <label [class.error]="submitted && !groupForm.get('name').valid">Name {{ submitted && !groupForm.get('name').valid ? 'is required!' : '' }}</label>
+                <div class="input-wrap input-wrap--contained input-wrap--small"
+                     [class.input-wrap--error]="submitted && !groupForm.get('name').valid">
+                    <input type="text"
+                           class="input-wrap__input"
+                           formControlName="name">
+                </div>
+            </div>
+            <div class="modal-section mb--16">
+                <label [class.error]="submitted && !groupForm.get('runtimes').valid">Runtime {{ submitted && !groupForm.get('runtimes').valid ? 'is required!' : '' }}</label>
+                <ng-select class="dropdown dropdown--contained"
+                           [items]="dropdownItems"
+                           [multiple]="true"
+                           placeholder="Select runtime"
+                           formControlName="runtimes"
+                           bindValue="value"
+                           bindLabel="label"
+                           [closeOnSelect]="false"
+                           [class.dropdown--error]="submitted && !groupForm.get('runtimes').valid"
+                           [searchable]="false">
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                        <span class="ng-value-label">
+                          <div class="chip chip--icon-right chip--outlined">
+                            {{item.label}}
+                              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                                      (click)="clear(item)" aria-hidden="true"></button>
+                          </div>
+                        </span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+                        </div>
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div class="item item--avatar-text">
+                            {{item.label}}
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div class="modal-section mb--16">
+                <label>Description</label>
+                <div class="textarea-wrap textarea-wrap--contained">
+                    <textarea class="textarea-wrap__textarea"
+                              placeholder="Description"
+                              formControlName="description"
+                              rows="3"></textarea>
+                </div>
+            </div>
+        </form>
+        <label  class="d-flex align-items-center"
+                *ngIf="group">
+            <span class="icon icon--info mr-2"></span>
+            If you remove group all nodes inside will be removed automatically
+        </label>
+    </div>
+    <div class="modal-footer">
+        <button class="button button--contained button--error button--medium mr-2"
+                *ngIf="group"
+                (click)="onRemoveGroup($event)">
+            Remove
+        </button>
+        <button class="button button--ghost button--medium ml-auto mr-2"
+                (click)="close($event)">
+            Cancel
+        </button>
+        <button class="button button--contained button--medium"
+                (click)="onSave($event)">
+            {{ group ? 'Update' : 'Create' }}
+        </button>
+    </div>
+</ng-template>

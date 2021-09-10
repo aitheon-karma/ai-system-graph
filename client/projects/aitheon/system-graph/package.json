@@ -1,0 +1,7 @@
+{
+  "name": "@aitheon/system-graph",
+  "version": "0.1.0",
+  "peerDependencies": {
+    "@aitheon/core-client": "1.8.1"
+  }
+}

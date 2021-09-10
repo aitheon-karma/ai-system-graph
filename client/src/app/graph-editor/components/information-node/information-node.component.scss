@@ -1,0 +1,38 @@
+.information-node {
+    position: relative;
+    //min-width: 250px;
+
+    &__input-wrap {
+        &:before {
+            background: rgba(#2b2b2b, 0.5) !important;
+            z-index: 2 !important;
+        }
+    }
+
+    &__text {
+        background: rgba(#2b2b2b, 0.5) !important;
+        color: rgba(#eee, 0.85) !important;
+        resize: both !important;
+    }
+
+    &__context-menu {
+        position: absolute;
+    }
+
+    &__context-menu-item {
+        font-size: 14px;
+        line-height: 14px;
+        cursor: pointer;
+        color: #fff;
+        padding: 15px;
+        outline: none;
+        z-index: 10;
+        background: #2e2e2e;
+        transition: .2s ease-in-out;
+        min-width: 170px;
+
+        &:hover {
+            background: #454544;
+        }
+    }
+}

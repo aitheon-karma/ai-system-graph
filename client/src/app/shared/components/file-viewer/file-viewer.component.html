@@ -1,0 +1,30 @@
+<ng-template #fileViewerModal>
+	<div class="modal-header">
+		<h4 class="modal-title pull-left">
+			File name: {{ file?.name }}
+		</h4>
+		<div class="ml-auto d-flex align-items-center">
+			<button type="button"
+							class="icon icon--close icon--dynamic ml--16"
+							(click)="close()"
+							aria-label="Close">
+			</button>
+		</div>
+	</div>
+	<div class="file-container" (wheel)="onScroll($event)" (mousedown)="onEditorDrag($event)" (drop)="onEditorDrop()" #editorContainer>
+		<div class="file-container__image" *ngIf="file?.contentType.includes('image')">
+			<img [src]="file.signedUrl"  [ngStyle]="transformStyles" [draggable]="false">
+		</div>
+		<div class="file-container__zoom-buttons">
+    <span class="icon icon--minus icon--size-16px"
+          (click)="zoomByButtons($event, 'ZOOM_OUT')"></span>
+    <span class="file-container__scale"
+          (click)="fitMap()">
+      <span class="scale">{{ scale | number: '2.0-3' }}%</span>
+      <span class="fit">Fit</span>
+    </span>
+    <span class="icon icon--plus icon--size-16px"
+          (click)="zoomByButtons($event, 'ZOOM_IN')"></span>
+  </div>
+	</div>
+</ng-template>	

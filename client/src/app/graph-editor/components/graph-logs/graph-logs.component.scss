@@ -1,0 +1,62 @@
+.graph-logs {
+    position: relative;
+    z-index: 10;
+
+    &__content {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 193px);
+        background: #282828;
+        width: calc(100vw / 2 - 100px);
+        transition: transform .3s ease-in-out;
+
+        &--show {
+            transform: translateX(0);
+        }
+
+        &--hide {
+            transform: translateX(calc(-100vw / 2 - 100px));
+        }
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid #454545;
+    }
+
+    &__title {
+        color: #fff;
+        font-size: 16px;
+        font-weight: normal;
+        letter-spacing: 0.1px;
+    }
+
+    &__log-container {
+        flex-direction: column;
+        flex-grow: 1;
+        display: flex;
+        width: 100%;
+        padding: 16px;
+        justify-content: center;
+    }
+
+    &__logs {
+        padding: 2px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        background: #1e1e1e;
+        color: #fff;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: calc(100vh - 285px);
+
+        &--hidden {
+            display: none;
+        }
+    }
+}

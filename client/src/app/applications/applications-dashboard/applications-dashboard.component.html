@@ -1,0 +1,14 @@
+<div class="container applications-dashboard__container">
+    <div class="applications-dashboard__title">{{ application?.project?.name }}</div>
+    <div class="applications-dashboard__sub-title">Application type:&nbsp;&nbsp;
+        <span class="applications-dashboard__sub-title--gold">{{ application?.project?.projectSubType }}</span>
+    </div>
+    <ai-application-dashboard [application]="application"
+                              [isReadonly]="false"
+                              [allowCollapse]="false"
+                              [graphURL]="graphUrl">
+    </ai-application-dashboard>
+</div>
+
+<ai-loading class="loading-container"
+            *ngIf="isLoading"></ai-loading>

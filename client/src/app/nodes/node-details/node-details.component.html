@@ -1,0 +1,181 @@
+<div class="node-details"
+     *ngIf="nodeForm">
+    <div class="node-details__title">{{ mode === 'EDIT' ? 'Details' : 'New Node' }}</div>
+    <form [formGroup]="nodeForm">
+        <div class="node-details__input-wrap">
+            <label [class.error]="submitted && !nodeForm.get('name').valid">Name {{ submitted && !nodeForm.get('name').valid ? 'is required!' : '' }}</label>
+            <div class="input-wrap input-wrap--contained input-wrap--small"
+                 [class.input-wrap--error]="submitted && !nodeForm.get('name').valid">
+                <input type="text"
+                       class="input-wrap__input"
+                       formControlName="name">
+            </div>
+        </div>
+        <div class="node-details__input-wrap">
+            <label [class.error]="submitted && !runtime.valid">
+                Runtime {{ submitted && !runtime.valid ? 'is required!' : '' }}</label>
+            <ng-select class="dropdown dropdown--contained"
+                       [class.dropdown--error]="submitted && !nodeForm.get('runtime').valid"
+                       [items]="dropdownItems"
+                       id="runtime"
+                       [clearable]="dropdownClearable"
+                       formControlName="runtime"
+                       bindLabel="label"
+                       bindValue="value"
+                       placeholder="Select Runtime">
+            </ng-select>
+        </div>
+        <div class="node-details__input-wrap"
+             *ngIf="deviceType">
+            <label [class.error]="submitted && !deviceType ?.valid">
+                Device Type {{ submitted && !deviceType?.valid ? 'is required!' : '' }}</label>
+            <ng-select class="dropdown dropdown--contained"
+                       [class.dropdown--error]="submitted && !deviceType ?.valid"
+                       [items]="[]"
+                       id="device-type"
+                       [clearable]="dropdownClearable"
+                       formControlName="deviceType"
+                       bindLabel="label"
+                       bindValue="value"
+                       placeholder="Select Device Type">
+            </ng-select>
+        </div>
+        <div class="node-details__input-wrap">
+            <label>Group</label>
+            <div class="input-wrap input-wrap--contained input-wrap--small">
+                <input type="text"
+                       class="input-wrap__input"
+                       formControlName="group">
+            </div>
+        </div>
+        <div class="node-details__input-wrap">
+            <label>Description</label>
+            <div class="textarea-wrap textarea-wrap--contained">
+                    <textarea class="textarea-wrap__textarea"
+                              placeholder="Description"
+                              formControlName="description"
+                              rows="2"></textarea>
+            </div>
+        </div>
+        <div class="node-details__section-title">inputs</div>
+        <div class="node-details__section">
+            <div class="node-details__inputs-wrap"
+                 formArrayName="inputs"
+                 *ngFor="let input of inputsArray.controls; let i = index">
+                <ng-container [formGroupName]="i">
+                    <div class="node-details__io-multiple">
+                        <label class="m--0 mr--16">Multiple:</label>
+                        <label class="switch">
+                            <input class="switch__input"
+                                   name="switchExample"
+                                   formControlName="multiple"
+                                   type="checkbox"
+                                   tabindex="1">
+                            <span class="switch__toggle"></span>
+                        </label>
+                    </div>
+                    <div class="node-details__input-wrap node-details__io-wrap pr--16">
+                        <label [class.error]="submitted &&!input.get('name').valid">Name</label>
+                        <div class="input-wrap input-wrap--contained input-wrap--small"
+                             [class.input-wrap--error]="submitted &&!input.get('name').valid">
+                            <input type="text"
+                                   placeholder="Input Name"
+                                   class="input-wrap__input"
+                                   formControlName="name">
+                        </div>
+                    </div>
+                    <div class="node-details__input-wrap node-details__io-wrap">
+                        <label [class.error]="submitted &&!input.get('socket').valid">
+                            Socket
+                            {{ submitted && input.get('socket').hasError('required') ? ' is required' : '' }}
+                            {{ submitted && input.get('socket').hasError('invalidRuntime') ? ' has invalid runtime' : '' }}
+                        </label>
+                        <ng-select class="dropdown dropdown--contained"
+                                   [class.dropdown--error]="submitted && !input.get('socket').valid"
+                                   [items]="validSockets"
+                                   bindLabel="name"
+                                   bindValue="_id"
+                                   formControlName="socket"
+                                   placeholder="Select Socket">
+                        </ng-select>
+                    </div>
+                    <div class="icon icon--dynamic icon--delete node-details__io-delete"
+                         (click)="deleteIO($event, i, 'input')"></div>
+                </ng-container>
+            </div>
+            <div class="icon icon--dynamic icon--plus mt--4"
+                 (click)="addIO($event, 'input')"
+                 title="Add Input"></div>
+        </div>
+        <div class="node-details__section-title">outputs</div>
+        <div class="node-details__section mb--16">
+            <div class="node-details__inputs-wrap"
+                 formArrayName="outputs"
+                 *ngFor="let output of outputsArray.controls; let i = index">
+                <ng-container [formGroupName]="i">
+                    <div class="node-details__input-wrap node-details__io-wrap pr--16">
+                        <label [class.error]="submitted &&!output.get('name').valid">Name</label>
+                        <div class="input-wrap input-wrap--contained input-wrap--small"
+                             [class.input-wrap--error]="submitted &&!output.get('name').valid">
+                            <input type="text"
+                                   placeholder="Output Name"
+                                   class="input-wrap__input"
+                                   formControlName="name">
+                        </div>
+                    </div>
+                    <div class="node-details__input-wrap node-details__io-wrap node-details__io-wrap node-details__io-wrap--large">
+                        <label [class.error]="submitted &&!output.get('socket').valid">
+                            Socket
+                            {{ submitted && output.get('socket').hasError('required') ? ' is required' : '' }}
+                            {{ submitted && output.get('socket').hasError('invalidRuntime') ? ' has invalid runtime' : '' }}
+                        </label>
+                        <ng-select class="dropdown dropdown--contained"
+                                   [class.dropdown--error]="submitted && !output.get('socket').valid"
+                                   [items]="validSockets"
+                                   bindLabel="name"
+                                   bindValue="_id"
+                                   formControlName="socket"
+                                   placeholder="Select Socket">
+                        </ng-select>
+                    </div>
+                    <div class="icon icon--dynamic icon--delete node-details__io-delete"
+                         (click)="deleteIO($event, i, 'output')"></div>
+                </ng-container>
+            </div>
+            <div class="icon icon--dynamic icon--plus mt--4"
+                 (click)="addIO($event, 'output')"
+                 title="Add Output"></div>
+        </div>
+        <div class="node-details__input-wrap">
+            <label [class.error]="submitted && !nodeForm.get('structure').valid">
+                {{
+              submitted && nodeForm.get('structure').hasError('required') && 'Node Structure is required!' ||
+              submitted && nodeForm.get('structure').hasError('invalidJSON') && 'Node Structure is invalid' ||
+              'Node Structure'
+                }}
+            </label>
+            <div class="textarea-wrap textarea-wrap--contained"
+                 [class.textarea-wrap--error]="submitted && !nodeForm.get('structure').valid">
+                    <textarea class="textarea-wrap__textarea"
+                              tabindex="-1"
+                              indent
+                              placeholder="Node Structure"
+                              formControlName="structure"
+                              rows="17"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="d-flex align-items-center">
+        <button class="button button--contained button--error button--medium"
+                *ngIf="mode === 'EDIT'"
+                type="button"
+                (click)="onDelete($event)">
+            delete
+        </button>
+        <button class="button button--contained button--medium ml-auto"
+                type="button"
+                (click)="onSave($event)">
+            {{ mode === 'EDIT' ? 'update' : 'save' }}
+        </button>
+    </div>
+</div>

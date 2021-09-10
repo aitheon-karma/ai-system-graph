@@ -1,0 +1,36 @@
+<div class="mapping-node"
+     [class.mapping-node--dragging]="isDragging"
+     (mousedown)="isDragging = true"
+     (mouseup)="isDragging = false"
+     (mouseout)="hideOptionsMenuButton()"
+     (mouseover)="showOptionsMenuButton()"
+     (dblclick)="onOptionsMenuAction('MAPPING')"
+     #nodeViewRef>
+    <div class="mapping-node__show-more">
+        <ai-show-more-menu [items]="showMoreItems"
+                           #showMoreMenu
+                           *ngIf="isOptionsButtonVisible"
+                           [small]="true"
+                           (closed)="isOptionsButtonVisible = false; node.update()"
+                           (itemSelected)="onOptionsMenuAction($event)"></ai-show-more-menu>
+    </div>
+    <div class="mapping-node__body">
+        <socket [custom]="true"
+                *ngFor="let input of inputs"
+                node-socket
+                [socket]="input?.socket"
+                [aiTooltip]="input?.socket?.name"
+                [io]="input">
+            <div class="mapping-node__source"></div>
+        </socket>
+        <div class="mapping-node__icon"></div>
+        <socket [custom]="true"
+                *ngFor="let output of outputs"
+                node-socket
+                [socket]="output?.socket"
+                [aiTooltip]="output?.socket?.name"
+                [io]="output">
+            <div class="mapping-node__target"></div>
+        </socket>
+    </div>
+</div>

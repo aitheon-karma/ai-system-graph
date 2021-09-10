@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="27px" viewBox="0 0 29 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>node-error-ic</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="29" height="27"></rect>
+        <path d="M10,0 C10.3634559,0 10.7023706,0.176000796 10.9167874,0.469071969 L10.9911626,0.584346234 L19.8466679,16.2469626 C20.0511117,16.6085591 20.0511106,17.0540651 19.8466652,17.4156606 C19.6649359,17.7370788 19.3462121,17.9487871 18.9904539,17.9918653 L18.8555039,18 L1.14451328,18 C0.735623273,18 0.35778791,17.7772657 0.153338399,17.4156686 C-0.0283945004,17.094249 -0.0485884668,16.7065277 0.0927569757,16.3703732 L0.153333677,16.2469626 L9.008839,0.584346234 C9.21328584,0.222751007 9.59111371,0 10,0 Z M10,2.894 L2.59,16 L17.409,16 L10,2.894 Z M10,9 C10.5522847,9 11,9.44771525 11,10 L11,14 C11,14.5522847 10.5522847,15 10,15 C9.44771525,15 9,14.5522847 9,14 L9,10 C9,9.44771525 9.44771525,9 10,9 Z M10,6 C10.5522847,6 11,6.44771525 11,7 C11,7.55228475 10.5522847,8 10,8 C9.44771525,8 9,7.55228475 9,7 C9,6.44771525 9.44771525,6 10,6 Z" id="path-3"></path>
+    </defs>
+    <g id="Core" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-48" transform="translate(-361.000000, -12.000000)">
+            <g id="node-error-ic" transform="translate(361.000000, 12.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask"></g>
+                <g id="Group-37" mask="url(#mask-2)">
+                    <g transform="translate(-2.000000, -2.000000)">
+                        <path d="M18.7068039,3.29982088 L30.4902522,26.0811542 C30.9977167,27.0622523 30.6137608,28.2689707 29.6326627,28.7764353 C29.3486555,28.9233356 29.0335664,29 28.7138169,29 L4.1768572,29 C3.0722877,29 2.1768572,28.1045695 2.1768572,27 C2.1768572,26.657906 2.2646054,26.3215302 2.4317134,26.0230286 L15.1852248,3.24169531 C15.7247912,2.277879 16.9435237,1.93395651 17.90734,2.47352292 C18.2489596,2.66476937 18.5269358,2.95207586 18.7068039,3.29982088 Z" id="Rectangle" fill="#131415"></path>
+                        <g id="Group" stroke-width="1" fill="none" transform="translate(5.000000, 5.000000)">
+                            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" transform="translate(2.000000, 3.000000)">
+                                <mask id="mask-4" fill="white">
+                                    <use xlink:href="#path-3"></use>
+                                </mask>
+                                <use id="Mask" fill="#7E7E7E" fill-rule="nonzero" xlink:href="#path-3"></use>
+                                <g id="Group" mask="url(#mask-4)">
+                                    <g transform="translate(-2.000000, -3.000000)" id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                                        <rect id="Additional-Colors-/-Filled-/-$base-red" fill="#E96058" x="0" y="0" width="24" height="24"></rect>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

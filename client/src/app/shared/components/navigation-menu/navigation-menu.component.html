@@ -1,0 +1,13 @@
+<div class="navigation-menu__wrap">
+    <div class="navigation-menu">
+        <ng-container *ngFor="let item of menuData">
+            <div class="navigation-menu__item"
+                 [class.navigation-menu__item--disabled]="item.disabled"
+                 *ngIf="item.permissions === 'all' || item.permissions === 'sysadmin' && isSysAdmin || item.permissions === 'socketsAdmin' && hasSocketsAccess"
+                 [routerLink]="item.routerLink"
+                 routerLinkActive="navigation-menu__item--active">
+                {{ item.title }}
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,397 @@
+<ng-template #settingsProjectModal>
+  <div class="modal-header store-settings__header">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="modal-title pull-left position-relative">
+          Publish request
+        </h4>
+        <div class="icon icon--close icon--dynamic"
+             (click)="closeModal($event)"></div>
+      </div>
+      <div class="request-modal__navigation">
+        <ng-container *ngFor="let tab of tabs; let i = index">
+          <div class="request-modal__navigation-item"
+               (click)="switchTab(tab.key, $event)"
+               [class.request-modal__navigation-item--active]="activeTab === tab.key"
+               [class.request-modal__navigation-item--success]=" tab.key === tabTypes.INFORMATION ||
+                                    tab.key !== tabTypes.INFORMATION && viewedTabs.includes(tab.key) || disabled">
+            {{ tab.label }}
+            <div class="request-modal__complete-icon"
+                 *ngIf="tab.key === tabTypes.INFORMATION && appStoreForm ?.valid ||
+                                    tab.key !== tabTypes.INFORMATION && viewedTabs.includes(tab.key) ||
+                                    disabled"></div>
+          </div>
+          <div class="icon icon--chevron-right ml--8 mr--8"
+               *ngIf="i !== tabs.length - 1"></div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body request-modal__body"
+       [class.request-modal__disabled]="disabled">
+    <ng-container [ngSwitch]="activeTab">
+      <ng-container *ngSwitchCase="tabTypes.INFORMATION">
+        <form [formGroup]="appStoreForm"
+              *ngIf="appStoreForm">
+          <div class="store-settings">
+            <div class="store-settings__section store-settings__section--bottom-margin">
+              <label [hidden]="submitted && appStoreForm.get('name').invalid" class="grey">
+                Name
+              </label>
+              <label *ngIf="submitted && appStoreForm.get('name').invalid" class="text-danger">
+                Name is required
+              </label>
+              <div class="input-wrap input-wrap--contained input-wrap--small"
+                   [class.input-wrap--error]="submitted && appStoreForm.get('name').invalid">
+                <input name="name" formControlName="name" class="input-wrap__input">
+                <!-- <span class="input-wrap__icon icon icon--edit"></span> -->
+              </div>
+            </div>
+            <div class="store-settings__section store-settings__section--upload">
+              <div class="row m-0 app-store__upload-section upload-files">
+                <div class="upload-files__file-row"
+                     *ngIf="storeRequest?.titleImage">
+                  <div class="upload-files__drop-image-container image-avatar-container">
+                    <img src="{{ storeRequest?.titleImage?.url }}"
+                         height="100%">
+                    <span class="upload-files__file-name">{{ storeRequest?.titleImage?.filename }}</span>
+                    <button type="button"
+                            class="upload-files__remove"
+                            *ngIf="!disabled"
+                            (click)="itemAvatarImageRemove()">
+                      <span class="icon icon--close icon--black"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="upload-files__upload-button-section"
+                     *ngIf="!storeRequest?.titleImage || !disabled">
+                  <div ng2FileDrop [uploader]="driveAvatarUploader?.uploader"
+                       class="upload-files__drop-zone drop-zone-avatar">
+                    <div class="upload-files__upload-button-wrapper">
+                      <div class="fileContainer download-button upload-files__file-container file-avatar-container file-avatar-container"
+                           *ngIf="!storeRequest?.titleImage">
+                        <span class="icon icon--plus"></span>
+                        <input type="file"
+                               [accept]="allowedMimeType.toString()"
+                               ng2FileSelect
+                               [uploader]="driveAvatarUploader?.uploader"/>
+                      </div>
+                    </div>
+
+                    <label class="text-danger upload-files__error"
+                           *ngIf="!storeRequest?.titleImage && submitted">
+                      Title image is required
+                    </label>
+                  </div>
+                </div>
+                <div class="upload-files__upload-button-section"
+                     *ngIf="!disabled && storeRequest?.titleImage">
+                  <div ng2FileDrop
+                       [uploader]="driveAvatarUploader?.uploader"
+                       class="upload-files__upload-button">
+                    <div class="upload-files__upload-button-wrapper">
+                      <div class="fileContainer download-button upload-files__file-container--edit"
+                           [class.pos-fix]="storeRequest?.titleImage">
+                        <input type="file" [accept]="allowedMimeType.toString()"
+                               ng2FileSelect
+                               [uploader]="driveAvatarUploader?.uploader"/>
+                        EDIT
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="store-settings__upload-info"
+                   *ngIf="!disabled">
+                <div class="store-settings__upload-info-top">
+                  <button class="store-settings__upload-button button button--ghost button--small">
+                    <input type="file"
+                           [accept]="allowedMimeType.toString()"
+                           ng2FileSelect
+                           [uploader]="driveAvatarUploader?.uploader"/>
+                    Upload image
+                  </button>
+                  <div class="store-settings__formats">
+                    <label class="grey mb-0 mr-2">Available formats:</label>
+                    <span class="store-settings__format">.jpg</span>
+                    <span class="store-settings__format">.jpeg</span>
+                    <span class="store-settings__format">.png</span>
+                  </div>
+                </div>
+                <div class="store-settings__upload-divider"></div>
+                <span class="store-settings__max-size">Max file size: 3 MB</span>
+              </div>
+            </div>
+            <div class="store-settings__section store-settings__section--small">
+              <label class="grey"
+                     [hidden]="submitted && appStoreForm.get('category').invalid">Category</label>
+              <label class="text-danger" *ngIf="submitted && appStoreForm.get('category').invalid">Category
+                is required</label>
+              <div class="mb-0">
+                <ng-select class="dropdown dropdown--contained" [items]="categories"
+                           [class.dropdown--error]="submitted && appStoreForm.get('category').invalid"
+                           [selectOnTab]="true"
+                           bindLabel="name" bindValue="_id" [clearable]="false"
+                           [searchable]="false"
+                           placeholder="Select category" formControlName="category">
+                </ng-select>
+              </div>
+            </div>
+            <div class="store-settings__section">
+              <div class="store-settings__url-label">
+                <label class="grey" [hidden]="submitted && !appStoreForm.get('urlName').valid">
+                  Product URL:
+                </label>
+                <label *ngIf="submitted && !appStoreForm.get('urlName').valid" class="text-danger">
+                  Slug Name is required
+                </label>
+                <span class="store-settings__url-preview" *ngIf="appStoreForm.get('urlName').valid">
+                                    aitheon.com/market/product/
+                                    <span class="store-settings__url-preview store-settings__url-preview--white">{{ appStoreForm.get('urlName').value }}</span>
+                                </span>
+              </div>
+              <div class="input-wrap input-wrap--contained input-wrap--small"
+                   [class.input-wrap--error]="submitted && !appStoreForm.get('urlName').valid">
+                <input name="urlName" formControlName="urlName" class="input-wrap__input">
+              </div>
+            </div>
+            <div class="store-settings__section mb--8">
+              <label class="grey" [hidden]="submitted && !appStoreForm.get('description').valid">
+                Description
+              </label>
+              <label *ngIf="submitted && !appStoreForm.get('description').valid"
+                     class="text-danger">
+                Description is required
+              </label>
+              <div class="textarea-wrap textarea-wrap--contained"
+                   [class.textarea-wrap--error]="submitted && !appStoreForm.get('description').valid">
+                            <textarea autosize [minRows]="4" [maxRows]="4" formControlName="description"
+                                      name="description" maxlength="200"
+                                      class="textarea-wrap__textarea" rows="4"></textarea>
+                <span class="textarea-wrap__counter">
+                                {{ appStoreForm.get('description').value ? appStoreForm.get('description').value?.length : 0 }}
+                  /200
+                            </span>
+              </div>
+            </div>
+            <div class="store-settings__section mb--0"
+                 *ngIf="disabled ? storeRequest?.images ?.length : true">
+              <label class="gray font-size-12 mb--4">Screenshots</label>
+              <div class="row m-0 app-store__upload-section upload-files">
+                <div class="upload-files__file-row"
+                     *ngIf="storeRequest?.images && storeRequest?.images.length">
+                  <div class="upload-files__drop-image-container"
+                       *ngFor="let data of storeRequest?.images; let i = index">
+                    <img src="{{ data.url }}" height="100%">
+                    <span class="upload-files__file-name">{{ data.filename }}</span>
+                    <button type="button"
+                            class="upload-files__remove"
+                            *ngIf="!disabled"
+                            (click)="removeScreenshot(i)"><span
+                            class="icon icon--close icon--black"></span></button>
+                  </div>
+                </div>
+                <div class="upload-files__upload-button-section" *ngIf="!disabled">
+                  <div ng2FileDrop [uploader]="driveUploader?.uploader"
+                       class="upload-files__drop-zone upload-files__drop-zone--dashed">
+                    <div class="upload-files__upload-button-wrapper">
+                      <div class="fileContainer download-button upload-files__file-container upload-files__file-container--transparent">
+                        <span class="icon icon--plus"></span>
+                        <input type="file" [accept]="allowedMimeType.toString()"
+                               ng2FileSelect
+                               [uploader]="driveUploader?.uploader"
+                               multiple/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="store-settings__payments">
+            <div class="store-settings__section">
+              <fieldset [disabled]="disabled">
+                <label class="grey">PRICING</label>
+                <div class="row flex-column">
+                  <div class="form-check mb-3">
+                    <div class="store-settings__payment_section">
+                      <label class="m-0 pl-3 white" for="oneTimeRadio">
+                        <input [value]="pricingType.ONE_TIME"
+                               name="pricingType"
+                               formControlName="pricingType"
+                               type="radio"
+                               id="oneTimeRadio">
+                        <span class="check"></span>
+                        One time payment
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <div class="store-settings__payment_section">
+                      <label class="m-0 pl-3 white" for="monthlyRadio">
+                        <input [value]="pricingType.MONTHLY" name="pricingType"
+                               formControlName="pricingType"
+                               type="radio"
+                               id="monthlyRadio">
+                        <span class="check"></span>
+                        Monthly subscription
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="store-settings__section">
+              <label [hidden]="submitted && !appStoreForm.get('price').valid" class="grey">
+                Amount
+              </label>
+              <label *ngIf="submitted && appStoreForm.get('price').hasError('required')"
+                     class="text-danger">
+                Amount is required
+              </label>
+              <label *ngIf="submitted && appStoreForm.get('price').hasError('pattern')"
+                     class="text-danger">
+                Amount is invalid
+              </label>
+              <div class="store-settings__currency-input input-wrap input-wrap--contained input-wrap--price input-wrap--small p-0"
+                   [class.input-wrap--error]="submitted && !appStoreForm.get('price').valid">
+                <input type="number"
+                       formControlName="price"
+                       class="input-wrap__input"
+                       name="price">
+                <span class="currency-sign" *ngIf="appStoreForm.get('price').value">$</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+      <ng-container *ngSwitchCase="tabTypes.CUSTOMIZATION">
+        <section *ngIf="nodeStylingForm"
+                 class="d-flex flex-column flex-grow-1">
+          <div class="request-modal__section request-modal__section--border-bottom request-modal__section--fit-content pb--24">
+            <label class="gray font-size-10">NODE PREVIEW</label>
+            <div class="store-settings__node-preview-wrap">
+              <div class="store-settings__node-preview">
+                <ai-node-preview [node]="node"
+                                 size="small"
+                                 [toolboxPreview]="false"></ai-node-preview>
+              </div>
+            </div>
+          </div>
+          <form [formGroup]="nodeStylingForm"
+                class="d-flex flex-column flex-grow-1">
+            <div class="request-modal__section position-relative">
+              <label class="gray font-size-10 mb--8 mt--8">CUSTOMIZATION</label>
+              <div class="d-flex align-items-start">
+                <div class="store-settings__section mr-5">
+                  <label class="gray">Logo</label>
+                  <div class="row m-0 mt-4mt-4 app-store-_upload-section upload-files">
+                    <div class="upload-files__file-row"
+                         *ngIf="storeRequest?.nodeStyling?.logo; else logoUploader">
+                      <div class="upload-files__drop-image-container mr-0">
+                        <img src="{{ storeRequest?.nodeStyling?.logo?.url }}"
+                             alt="Node Logo"
+                             height="100%">
+                        <span class="upload-files__file-name">{{ storeRequest?.nodeStyling?.logo?.filename }}</span>
+                        <button type="button"
+                                class="upload-files__remove"
+                                *ngIf="!disabled"
+                                (click)="removeLogo($event)"><span
+                                class="icon icon--close icon--black"></span></button>
+                      </div>
+                    </div>
+                    <ng-template #logoUploader>
+                      <div class="upload-files__upload-button-section" *ngIf="!disabled">
+                        <div ng2FileDrop [uploader]="driveLogoUploader?.uploader"
+                             class="upload-files__drop-zone">
+                          <div class="upload-files__upload-button-wrapper upload-files__upload-button-wrapper">
+                            <div class="fileContainer download-button upload-files__file-container">
+                              <span class="icon icon--plus"></span>
+                              <input type="file" [accept]="allowedMimeType.toString()"
+                                     ng2FileSelect
+                                     [uploader]="driveLogoUploader?.uploader"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="store-settings__section mr-5">
+                  <label>Background color</label>
+                  <div class="color-picker-container mb-2 mt-0">
+                    <input class="color-picker-input"
+                           [colorPicker]="nodeStylingForm.get('backgroundColor').value"
+                           [style.background]="nodeStylingForm.get('backgroundColor').value"
+                           [style.color]="nodeStylingForm.get('backgroundColor').value"
+                           [value]="nodeStylingForm.get('backgroundColor').value"
+                           (colorPickerChange)="nodeStylingForm.get('backgroundColor').setValue($event);"
+                           formControlName="backgroundColor"
+                           cpPosition="bottom"/>
+                  </div>
+                </div>
+                <div class="store-settings__section mr-5">
+                  <label>Border color</label>
+                  <div class="color-picker-container mb-2 mt-0">
+                    <input class="color-picker-input"
+                           [(colorPicker)]="nodeStylingForm.get('borderColor').value"
+                           [style.background]="nodeStylingForm.get('borderColor').value"
+                           [style.color]="nodeStylingForm.get('borderColor').value"
+                           [value]="nodeStylingForm.get('borderColor').value"
+                           (colorPickerChange)="nodeStylingForm.get('borderColor').setValue($event)"
+                           formControlName="borderColor"
+                           cpPosition="bottom"/>
+                  </div>
+                </div>
+              </div>
+              <span class="warning" *ngIf="nodeStylingForm && !disabled">
+                                <span class="icon icon--attention mr-2"></span>
+                                changes cannot be added after the request has been submitted
+                            </span>
+            </div>
+          </form>
+        </section>
+      </ng-container>
+    </ng-container>
+    <span class="warning" *ngIf="!disabled && appStoreForm && activeTab === tabTypes.INFORMATION">
+            <span class="icon icon--attention mr-2"></span>
+            changes cannot be added after the request has been submitted
+        </span>
+  </div>
+  <div class="modal-footer">
+    <button class="button button--medium button--ghost mr-2"
+            (click)="closeModal($event)">
+      cancel
+    </button>
+    <button class="button button--medium button--ghost mr-2"
+            *ngIf="activeTab === tabTypes.CUSTOMIZATION"
+            (click)="switchTab(tabTypes.INFORMATION, $event)">
+      back
+    </button>
+    <button class="button button--medium button--contained"
+            type="button"
+            *ngIf="disabled ? activeTab !== tabTypes.CUSTOMIZATION : true"
+            (click)="activeTab === tabTypes.CUSTOMIZATION ? saveStoreRequest($event) : switchToNextTab($event)">
+      {{ activeTab === tabTypes.CUSTOMIZATION ? 'save' : 'next' }}
+    </button>
+  </div>
+  <div class="loading-container"
+       *ngIf="loading">
+    <ai-loading></ai-loading>
+  </div>
+  <ai-drive-uploader [autoUpload]="true"
+                     #driveUploader
+                     (success)="onSuccessUpload($event)"
+                     [oganizationId]="currentOrganization?._id"
+                     [service]="serviceKey"></ai-drive-uploader>
+  <ai-drive-uploader [autoUpload]="true"
+                     #driveAvatarUploader
+                     (success)="onSuccessAvatarUpload($event)"
+                     [oganizationId]="currentOrganization?._id"
+                     [service]="serviceKey"></ai-drive-uploader>
+  <ai-drive-uploader [autoUpload]="true"
+                     #driveLogoUploader
+                     (success)="onSuccessLogoUpload($event)"
+                     [oganizationId]="currentOrganization?._id"
+                     [service]="serviceKey"></ai-drive-uploader>
+</ng-template>

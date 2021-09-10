@@ -1,0 +1,75 @@
+.socket-view {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  & div.socket-view__socket-chevron {
+    margin-left: -5px;
+  }
+
+  &--reverse {
+    & div.socket-view__socket-chevron {
+      margin-right: 3px;
+    }
+
+    flex-direction: row-reverse;
+  }
+
+  &__socket-dot {
+    transition: .2s ease-in-out;
+    width: 10px;
+    height: 10px;
+    background: var(--gray);
+    border-radius: 50%;
+  }
+
+  &__socket-chevron {
+    width: 16px !important;
+    max-width: 16px;
+    cursor: pointer !important;
+
+    &--left {
+      margin-left: -5px;
+    }
+
+    &--right {
+      margin-right: -5px;
+    }
+
+    &--in {
+      &:before {
+        color: #dcbc65 !important;
+      }
+    }
+
+    &--out {
+      &:before {
+        color: #67b231 !important;
+      }
+    }
+  }
+}
+
+.channel-icon {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+
+  &--client {
+    background: url('~/assets/icons/client.svg') center center no-repeat;
+  }
+
+  &--server {
+    background: url('~/assets/icons/server.svg') center center no-repeat;
+  }
+
+  &--running {
+    &.channel-icon--client {
+      background: url('~/assets/icons/client-running.svg') center center no-repeat;
+    }
+
+    &.channel-icon--server {
+      background: url('~/assets/icons/server-running.svg') center center no-repeat;
+    }
+  }
+}

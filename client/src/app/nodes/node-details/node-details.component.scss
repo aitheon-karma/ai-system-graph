@@ -1,0 +1,56 @@
+.node-details {
+    padding-bottom: 16px;
+
+    &__input-wrap {
+        margin-bottom: 16px;
+
+    }
+
+    &__title {
+        font-size: 16px;
+        color: #fff;
+        letter-spacing: 0.3px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+    }
+
+    &__section-title {
+        margin: 24px 0 8px 0;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: normal;
+        letter-spacing: 1px;
+        line-height: 16px;
+        color: #fff;
+    }
+
+    &__section {
+        border: 1px solid #454545;
+        padding: 16px;
+    }
+
+    &__inputs-wrap {
+        display: flex;
+        align-items: center;
+    }
+
+    &__io-wrap {
+        width: 47%;
+
+        &--large {
+            width: 53%;
+        }
+    }
+
+    &__io-multiple {
+        margin-top: 11px;
+        margin-right: 24px;
+        display: flex;
+        align-items: center;
+    }
+
+    &__io-delete {
+        margin-left: 8px;
+        margin-top: 12px;
+    }
+}

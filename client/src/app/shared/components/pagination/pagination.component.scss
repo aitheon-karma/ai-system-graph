@@ -1,0 +1,27 @@
+.ai-pagination {
+    display: flex;
+    align-items: center;
+
+    .page-item:not(.disabled) {
+        cursor: pointer;
+    }
+
+    &__separator {
+        height: 36px;
+        width: 1px;
+        background: #454545;
+        margin: 0 16px;
+    }
+
+    &__dropdown {
+        width: 90px;
+
+        ::ng-deep .ng-select-container  {
+            color: #7e7e7e !important;
+        }
+    }
+
+    &__cursor-default {
+        cursor: default !important;
+    }
+}

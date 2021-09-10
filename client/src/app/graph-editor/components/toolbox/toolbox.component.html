@@ -1,0 +1,141 @@
+<div class="toolbox__wrap"
+     aiClickOutside
+     (clickedOutside)="onClickOutside()">
+    <div class="toolbox"
+         [class.toolbox--closed]="!contentType">
+        <ng-container *ngIf="contentType">
+            <div class="toolbox__header">
+                <ul class="toolbox__nav">
+                    <li class="toolbox__nav-tab"
+                        *ngFor="let tab of tabs"
+                        (click)="switchTab(tab.key)"
+                        [class.toolbox__nav-tab--active]="activeTab == tab.key">
+                        {{ tab.label | titlecase }}
+                    </li>
+                </ul>
+                <div class="toolbox__browse">
+                    <button class="button button--ghost button--medium"
+                            (click)="goToMarketplace($event)">
+                        browse {{ contentType }}
+                    </button>
+                </div>
+                <div class="toolbox__close">
+            <span class="icon icon--close icon--dynamic"
+                  (click)="onCloseToolbox($event)"></span>
+                </div>
+            </div>
+            <div class="toolbox__sub-header"
+                 [class.toolbox__sub-header--border-bottom]="activeTab === tabTypes.MARKETPLACE_NODES ||
+                                                             activeTab === tabTypes.MY_NODES">
+                <div class="toolbox__sub-tabs">
+                    <ng-container *ngIf="activeTab === tabTypes.MARKETPLACE_NODES ||
+                                             activeTab === tabTypes.MY_NODES">
+                        <div class="toolbox__sub-tab"
+                             (click)="switchSubTab(tab, $event)"
+                             [class.toolbox__sub-tab--active]="activeSubTab === tab"
+                             *ngFor="let tab of subTabs">{{ tab | titlecase }}</div>
+                    </ng-container>
+                </div>
+                <button class="button button--contained button--medium ml--auto mr--24"
+                        *ngIf="activeTab === 'SUBGRAPH_TEMPLATES'"
+                        (click)="goToSubgraph($event)">
+                    add subgraph
+                </button>
+                <div class="toolbox__search search-container search-container--outlined"
+                     *ngIf="searchControl"
+                     [class.search-container--filled]="searchControl ?.value ?.length">
+                    <input type="search"
+                           placeholder="Search by name"
+                           class="search-container__input"
+                           [formControl]="searchControl">
+                    <div class="search-container__button icon icon--search icon--size-16px"></div>
+                    <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+                         (click)="clearSearchInput($event)"></div>
+                </div>
+            </div>
+            <div class="toolbox__body">
+                <ul class="toolbox__list"
+                    *ngIf="!loading && !servicesForm && viewCollection ?.length">
+                    <ng-container *ngFor="let item of viewCollection">
+                        <li class="toolbox__item custom-item"
+                            *ngIf="contentType === 'MODELS'; else nodeViewContainer">
+                            <div class="custom-item__image"></div>
+                            <div class="custom-item__info">
+                                <div class="custom-item__name">{{ item.name }}</div>
+                            </div>
+                            <div class="ml-auto icon icon--plus icon--dynamic"
+                                 *ngIf="contentType === 'MODELS'"
+                                 (click)="onAddModel($event, item)"></div>
+                        </li>
+                        <ng-template #nodeViewContainer>
+                            <ng-container [ngSwitch]="item.type">
+                                <ng-container *ngSwitchCase="nodeTypes.TEXTAREA">
+                                    <div class="text-box"
+                                         [draggable]="true"
+                                         (dragstart)="onDragStart($event, item)">
+                                        {{ item?.name }}
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="nodeTypes.IMAGE">
+                                    <div class="image-node"
+                                         aiTooltip="Image node"
+                                         [draggable]="true"
+                                         (dragstart)="onDragStart($event, item)">
+                                        <div class="image-node__inner">
+                                            <div class="icon icon--image"></div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngSwitchDefault>
+                                    <ai-node-preview [node]="item"></ai-node-preview>
+                                </ng-container>
+                            </ng-container>
+                        </ng-template>
+                    </ng-container>
+                </ul>
+                <form *ngIf="!loading && servicesForm"
+                      [formGroup]="servicesForm"
+                      class="toolbox__services-form">
+                    <ul class="toolbox__list"
+                        formArrayName="services">
+                        <li *ngFor="let service of servicesControlsArray.controls; let i = index"
+                            class="toolbox__item custom-item"
+                            [class.d-none]="searchControl.value && (!service.get('name').value.split('_').join(' ').toLowerCase().includes(searchControl.value.toLowerCase()))"
+                            [formGroupName]="i">
+                            <div class="custom-item__image"></div>
+                            <div class="custom-item__info">
+                                <div class="custom-item__name">
+                                    {{ service.get('name').value.split('_').join(' ') | titlecase }}
+                                </div>
+                            </div>
+                            <label class="switch toolbox__service-switch"
+                                   [aiTooltip]="!service.get('enabled').value ? 'Enable Service' : 'Disable Service'">
+                                <input class="switch__input"
+                                       name="tick-switch"
+                                       formControlName="enabled"
+                                       type="checkbox"
+                                       tabindex="1">
+                                <span class="switch__toggle"></span>
+                            </label>
+                        </li>
+                    </ul>
+                </form>
+                <div *ngIf="loading || !viewCollection ?.length"
+                     class="toolbox__empty">
+                    <ai-loading *ngIf="loading"></ai-loading>
+                    <div class="toolbox__empty-message"
+                         *ngIf="!loading && !viewCollection ?.length">
+                        There is nothing here yet
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="toolbox__show-button"
+         (click)="init('NODES')"
+         *ngIf="!contentType">
+    </div>
+</div>

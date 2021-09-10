@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>boolean-ic</title>
+    <g id="Core" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="23-Core-/-02_0N_Creating-custom-field" transform="translate(-180.000000, -510.000000)">
+            <g id="Group-26" transform="translate(164.000000, 384.000000)">
+                <g id="boolean-ic" transform="translate(16.000000, 126.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="16" height="16"></rect>
+                    <polygon id="01" fill="#7E7E7E" fill-rule="nonzero" points="13.4313965 12 13.4313965 4 12.2394911 4 10 5.59617604 10 7.04889796 12.1602338 5.48678009 12.262529 5.48678009 12.2394911 12"></polygon>
+                    <path d="M5.0027248,12 C6.88283379,12 8,10.5267327 8,8.00264026 C8,5.47326733 6.86648501,4 5.0027248,4 C3.13351499,4 2,5.47326733 2,7.99207921 C2,10.5214521 3.11716621,12 5.0027248,12 Z M5.05302245,11 C3.94680484,11 3.3,9.95985401 3.3,7.98905109 C3.3,6.03467153 3.95889465,5 5.05302245,5 C6.14715026,5 6.8,6.02919708 6.8,7.98905109 C6.8,9.96532847 6.15924007,11 5.05302245,11 Z" id="01" fill="#7E7E7E" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

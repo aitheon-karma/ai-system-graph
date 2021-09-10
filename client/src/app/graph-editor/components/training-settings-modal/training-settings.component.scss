@@ -1,0 +1,25 @@
+.training-modal {
+    &__input-container {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+    }
+
+    &__input-label {
+        min-width: 170px;
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: 0.2px;
+        line-height: 20px;
+        color: #fff;
+
+        &--dark {
+            color: #7e7e7e;
+        }
+    }
+}
+
+
+.dropdown--disabled {
+    pointer-events: none;
+}

@@ -1,0 +1,35 @@
+<div class="container nodes">
+    <div class="nodes__dashboard">
+        <div class="nodes__title">Core Nodes</div>
+        <div class="row mt--8">
+            <div class="col-2">
+                <ai-list label="Groups"
+                         [selectedId]="selectedGroupId"
+                         [items]="groups"
+                         (add)="showModal()"
+                         (edit)="onGroupEdit($event)"
+                         (select)="onGroupSelect($event)"></ai-list>
+            </div>
+            <div class="col-2">
+                <ai-list label="Nodes"
+                         [items]="nodes"
+                         *ngIf="selectedGroupId"
+                         [selectedId]="selectedNodeId"
+                         (add)="onNodeAdd()"
+                         (select)="onNodeSelect($event)"></ai-list>
+            </div>
+            <div class="col-8 nodes__details">
+                <ai-node-details [mode]="mode"
+                                 [group]="selectedGroup"
+                                 (save)="onNodeSave($event)"
+                                 (delete)="onNodeDelete($event)"
+                                 [node]="selectedNode"></ai-node-details>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ai-group-modal #groupModal
+                (removeGroup)="onGroupRemove($event)"
+                (submit)="onGroupSave($event)"></ai-group-modal>
+

@@ -1,0 +1,24 @@
+<form [formGroup]="subgraphForm">
+    <div class="subgraph-form"
+         *ngIf="subgraphForm">
+        <div class="input-wrap input-wrap--contained input-wrap--small subgraph-form__input-wrap flex-grow-1"
+             [class.input-wrap--error]="submitted ? !nameControl.valid : false">
+            <input type="text"
+                   placeholder="Subgraph Name"
+                   class="input-wrap__input"
+                   formControlName="name">
+        </div>
+        <div class="subgraph-form__input-wrap--runtime">
+            <ng-select class="dropdown dropdown--contained"
+                       [class.dropdown--error]="submitted ? !runtimeControl.valid : false"
+                       [items]="runtimes"
+                       id="runtime"
+                       [clearable]="dropdownClearable"
+                       formControlName="runtime"
+                       bindLabel="label"
+                       bindValue="value"
+                       placeholder="Select Runtime">
+            </ng-select>
+        </div>
+    </div>
+</form>

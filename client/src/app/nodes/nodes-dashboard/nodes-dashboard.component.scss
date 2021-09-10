@@ -1,0 +1,17 @@
+.nodes {
+    &__dashboard {
+        margin-top: 24px;
+    }
+
+    &__title {
+        font-size: 24px;
+        letter-spacing: 0;
+        line-height: 32px;
+        color: #fff;
+    }
+
+    &__details {
+        overflow-y: auto;
+        max-height: calc(100vh - 200px);
+    }
+}

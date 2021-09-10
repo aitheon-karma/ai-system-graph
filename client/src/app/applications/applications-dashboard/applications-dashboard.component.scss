@@ -1,0 +1,28 @@
+.applications-dashboard {
+  &__container {
+    padding: 0 0 48px 0 !important;
+  }
+
+  &__title {
+    margin-top: 24px;
+    font-size: 24px;
+    color: #fff;
+    letter-spacing: 0;
+    line-height: 32px;
+  }
+
+  &__sub-title {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .2px;
+    line-height: 20px;
+    color: #7e7e7e;
+    cursor: default;
+    margin-bottom: 24px;
+
+    &--gold {
+      color: #dcbc65;
+    }
+  }
+}

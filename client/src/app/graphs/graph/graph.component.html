@@ -1,0 +1,91 @@
+<div class="graph"
+     *ngIf="!loading; else loader">
+    <div class="graph__breadcrumbs">
+        <ng-template [ngIf]="subGraphId && graph || graph ?.type === 'SERVICE'">
+            <div class="graph__breadcrumbs-item"
+                 *ngFor="let navItem of navigationItems"
+                 (click)="goToParentGraph($event, navItem)">
+                {{ navItem.name | prettyEnum }}
+            </div>
+            <div class="graph__breadcrumbs-item graph__breadcrumbs-item--cursor-default">
+                {{ formattedGraphName | prettyEnum }}
+            </div>
+        </ng-template>
+    </div>
+    <div class="graph__subheader"
+         *ngIf="graph">
+        <div class="graph__title"
+             *ngIf="!isSubGraphTemplate; else subGraphForm">
+            {{ formattedGraphName | prettyEnum }}
+        </div>
+        <ng-template #subGraphForm>
+            <ai-subgraph-form [graph]="graph"
+                              [submitted]="submitted"></ai-subgraph-form>
+        </ng-template>
+        <ng-container *ngIf="readonly; else buttonsBlock">
+            <button class="button button--small mr--16  ml--auto button--ghost"
+                    (click)="unlinkGraph($event)"
+                    type="button">
+                unlink from template
+            </button>
+            <button class="button button--small mr--16 button--contained"
+                    *ngIf="!isSubGraphTemplate"
+                    (click)="showGraphBuild($event)"
+                    type="button">
+                show run info
+            </button>
+            <button class="button button--small button--contained"
+                    (click)="editSubgraphTemplate($event)"
+                    type="button">
+                edit template
+            </button>
+        </ng-container>
+        <ng-template #buttonsBlock>
+            <button class="button button--small mr--16 ml--auto button--contained"
+                    *ngIf="!isSubGraphTemplate"
+                    (click)="showGraphBuild($event)"
+                    type="button">
+                show run info
+            </button>
+            <button class="button button--small mr--16 ml-auto button--contained"
+                    *ngIf="isSubGraphTemplate"
+                    (click)="saveGraph($event)"
+                    type="button">
+                save
+            </button>
+            <button class="button button--small mr--16 button--contained"
+                    *ngIf="isSubGraphTemplate"
+                    (click)="navigateBackToGraph($event)"
+                    type="button">
+                back
+            </button>
+            <ng-container *ngIf="graph?.type !== 'TEMPLATE'">
+                <button class="button button--small mr--16 button--contained"
+                        (click)="toggleRun('START', $event)"
+                        type="button">
+                    run
+                </button>
+                <button class="button button--small button--contained"
+                        (click)="toggleRun('STOP', $event)"
+                        type="button">
+                    stop
+                </button>
+            </ng-container>
+        </ng-template>
+    </div>
+    <ng-template [ngIf]="!loading && graph">
+        <div class="graph__editor-wrap">
+            <ai-graph-editor #graphEditor
+                             *ngIf="graph"></ai-graph-editor>
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #loader>
+    <ai-loading class="loading-container"></ai-loading>
+</ng-template>
+
+<ai-build-status></ai-build-status>
+
+<ai-graph-loader [show]="graphDeploying"
+                 [type]="graphLoadingType"></ai-graph-loader>

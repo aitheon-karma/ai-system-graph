@@ -1,0 +1,119 @@
+<ng-template #addNodeModal>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">Training Settings</h4>
+        <button type="button"
+                class="icon icon--close icon--dynamic icon--size-24px"
+                (click)="hide()"
+                aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="trainingForm"
+              *ngIf="trainingForm">
+            <div class="training-modal__input-container">
+                <div class="training-modal__input-label">Turn on: True/False</div>
+                <label class="switch">
+                    <input class="switch__input"
+                           name="switchExample"
+                           formControlName="enabled"
+                           type="checkbox"
+                           tabindex="1">
+                    <span class="switch__toggle"></span>
+                </label>
+            </div>
+            <div class="training-modal__input-container">
+                <div class="training-modal__input-label"
+                     [class.training-modal__input-label--dark]="!enabledControl.value">
+                    Training Interval
+                </div>
+                <div [class.input-wrap--error]="intervalControl.touched && !intervalControl.valid"
+                     [class.input-wrap--disabled]="!enabledControl.value"
+                     class="input-wrap input-wrap--contained input-wrap--small flex-grow-1">
+                    <input class="input-wrap__input"
+                           type="text"
+                           autocomplete="off"
+                           formControlName="interval"
+                           placeholder="Training Interval">
+                    <div class="input-wrap__icon-error icon icon--attention parent-tt"
+                         [title]="intervalControl.errors && (
+                             intervalControl.errors.notNumber && 'Training interval must be a number' ||
+                             intervalControl.errors.required && 'Training interval is required!' ||
+                             intervalControl.errors.min && 'Training interval minimum value is 0'
+                         )">
+                    </div>
+                </div>
+            </div>
+            <div class="training-modal__input-container">
+                <div class="training-modal__input-label"
+                     [class.training-modal__input-label--dark]="!enabledControl.value">
+                    Consensus Confirmations
+                </div>
+                <div [class.input-wrap--error]="consensusConfirmationsControl.touched && !consensusConfirmationsControl.valid"
+                     [class.input-wrap--disabled]="!enabledControl.value"
+                     class="input-wrap input-wrap--contained input-wrap--small flex-grow-1">
+                    <input class="input-wrap__input"
+                           type="text"
+                           autocomplete="off"
+                           formControlName="consensusConfirmations"
+                           placeholder="Training Interval">
+                    <div class="input-wrap__icon-error icon icon--attention parent-tt"
+                         [title]="consensusConfirmationsControl.errors && (
+                             consensusConfirmationsControl.errors.notNumber && 'Consensus Confirmations must be a number' ||
+                             consensusConfirmationsControl.errors.required && 'Consensus Confirmations is required!' ||
+                             consensusConfirmationsControl.errors.min && 'Consensus Confirmations minimum value is 0'
+                         )">
+                    </div>
+                </div>
+            </div>
+            <div class="training-modal__input-container">
+                <div class="training-modal__input-label"
+                     [class.training-modal__input-label--dark]="!enabledControl.value">
+                    Permissions
+                </div>
+                <ng-select class="dropdown dropdown--contained"
+                           [items]="dropdownItems"
+                           [multiple]="true"
+                           placeholder="Select roles"
+                           formControlName="permissions"
+                           bindValue="value"
+                           [closeOnSelect]="false"
+                           [class.dropdown--disabled]="!enabledControl.value"
+                           [class.dropdown--error]="permissionsControl.touched && !permissionsControl.valid"
+                           [attr.title]="!permissionsControl.valid && 'Permissions required!' || undefined"
+                           [searchable]="false">
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                        <span class="ng-value-label">
+                          <div class="chip chip--icon-right chip--outlined">
+                            {{ item.name }}
+                              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                                      (click)="clear(item)" aria-hidden="true"></button>
+                          </div>
+                        </span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label chips-amount">+{{ items.length - 2 }}</span>
+                        </div>
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div class="item item--avatar-text">
+                            {{ item.name }}
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button class="button button--medium button--ghost mr-2 m-0"
+                type="button"
+                (click)="hide()">close
+        </button>
+        <button class="button button--medium button--contained m-0"
+                [disabled]="trainingForm && !trainingForm.valid"
+                type="button"
+                *ngIf="!disabled"
+                (click)="onSaveTrainingSettings($event)">save
+        </button>
+    </div>
+</ng-template>

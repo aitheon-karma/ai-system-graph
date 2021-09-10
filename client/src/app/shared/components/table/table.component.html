@@ -1,0 +1,83 @@
+<div class="ai-table">
+  <div class="ai-table__head"
+       *ngIf="title">
+    <div class="ai-table__main-title">{{ title }}</div>
+    <div class="ai-table__search-box">
+      <form [formGroup]="searchForm">
+        <div  class="search-container search-container__contained"
+              [class.search-container--filled]="searchForm.valid">
+          <input formControlName="search"
+                 type="search"
+                 placeholder="Search"
+                 class="search-container__input">
+          <div class="search-container__button icon icon--search icon--size-16px"></div>
+          <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+               (click)="searchForm.reset()"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="ai-table__filters row m-0">
+    <div *ngFor="let col of columns; trackBy: trackByFn"
+         [ngClass]="getColWidth(col.flex)"
+         [class.flex-row-reverse]="col.uom"
+         class="ai-table__title d-flex">
+      <span>
+        {{ col.title || '' }}
+      </span>
+      <div  *ngIf="col.title && !col.disableSort"
+            (click)="onStartSort(col.key, $event)"
+            [class.ai-table__arrows--active-up]="col.key === sortBy && ordering === 'DESC'"
+            [class.ai-table__arrows--active-down]="col.key === sortBy && ordering === 'ASC'"
+            class="ai-table__arrows">
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!filteredCollection.length && !loading"
+       class="list__empty-message">
+    No data to display
+  </div>
+  <div class="list__preload" *ngIf="loading">
+    <ai-loading></ai-loading>
+  </div>
+  <ul class="list" *ngIf="!loading && filteredCollection.length">
+<!--        *ngFor="let row of (pages && pages.length && pages[currentPage - 1] || filteredCollection) | fillRows:rowsCount; trackBy: trackByIndex"-->
+    <li (click)="onRowClick(row, $event)"
+        *ngFor="let row of filteredCollection | fillRows:rowsCount; let i = index; trackBy: trackByIndex"
+        [class.list__item--link]="!disableRowClick && row && row.id"
+        class="list__item row">
+      <div *ngFor="let col of columns; trackBy: trackByFn"
+           [ngClass]="getColWidth(col.flex)"
+           class="d-flex"
+           [class.justify-content-end]="row && col.uom">
+        <button *ngIf="row && col.callback && !col.checkMark; else colText"
+                class="btn btn-link list__item-btn"
+                (click)="col.callback(row, $event)">
+          {{row[col.key] || col.label }}
+        </button>
+        <ng-template #colText>
+          {{row && col.formatter ? col.formatter(row[col.key]) : row && row[col.key]}}
+        </ng-template>
+        <span *ngIf="row && col.checkMark" class="icon icon--tick icon--dynamic"
+              [class.icon--active]="row.selected" (click)="toggleSelected(i); col.callback(row, $event)"></span>
+        <span *ngIf="row && col.uom">&nbsp;&nbsp;{{col.uom}}</span>
+      </div>
+    </li>
+  </ul>
+<div *ngIf="!hideFooter" class="ai-table__footer">
+  <div class="row" *ngIf="!disablePagination && filteredCollection.length > initialRows; else emptyFooter">
+    <div class="ml-auto">
+      <ai-pagination  [pageSize]="rowsCount"
+                      [paginationConfig]="paginationConfig"
+                      [total]="filteredCollection.length"
+                      (pageChange)="pageChanged($event)"
+                      (pageSizeChange)="changeRowsCount($event)"
+                      [currentPage]="currentPage">
+      </ai-pagination>
+    </div>
+  </div>
+  <ng-template #emptyFooter>
+    <div class="pt--16"></div>
+  </ng-template>
+</div>
+</div>

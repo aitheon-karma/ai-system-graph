@@ -1,0 +1,8 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/aitheon/system-graph",
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  },
+  "deleteDestPath": false
+}

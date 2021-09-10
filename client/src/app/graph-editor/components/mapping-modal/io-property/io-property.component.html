@@ -1,0 +1,138 @@
+<div class="io-property__wrap"
+     [class.io-property__wrap--custom]="property?.isCustom">
+    <div class="io-property__content"
+         aiClickOutside
+         (mouseenter)="checkChildConnections()"
+         (mouseleave)="removeHighlight()"
+         (clickedOutside)="onClickOutside($event)"
+         #propertyViewRef>
+        <div class="io-property"
+             #propertyContent
+             [class.io-property--disabled]="ioType === ioTypes.OUTPUT || property.type === propertyTypes.object"
+             [class.io-property--selected]="isSelected"
+             [class.io-property--error]="isConnectionError"
+             [class.io-property--validation-error]="ioType === ioTypes.INPUT && (submitted$ | async) && !isValid"
+             (click)="onSelectProperty()">
+            <div class="io-property__info-section"
+                 [class.io-property__info-section--custom]="property?.isCustom"
+                 [class.io-property__info-section--opened]="ioType === ioTypes.INPUT && propertyForm">
+                <div class="io-property__icon {{ 'type--' + property.type }}"
+                     [class.io-property__icon--position-absolute]="property?.isCustom"
+                     [aiTooltip]="property?.type | titlecase">
+                </div>
+
+                <ng-container *ngIf="propertyForm && property.isCustom">
+                    <ng-container *ngTemplateOutlet="inputs"></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="!property?.isCustom">
+                    <div class="io-property__label">
+                        {{ property.propertyName }}
+                    </div>
+                    <div class="io-property__helper-text"
+                         *ngIf="property?.required && !property?.isCustom">
+                        Required
+                    </div>
+                </ng-container>
+
+                <div class="io-property__connection-dot"
+                     #connectionEdge
+                     (pointerover)="highlightConnection()"
+                     (pointerout)="removeConnectionHighlight()"
+                     (pointerup)="tryToConnect($event)"
+                     (pointerdown)="pickConnection($event)"
+                     [class.io-property__connection-dot--highlighted]="isPicked || isCompatible || hasConnection"
+                     [class.io-property__connection-dot--error]="isConnectionError"
+                     [class.io-property__connection-dot--transparent]="connections[0]?.isTransparent"
+                     [class.io-property__connection-dot--right]="ioType === ioTypes.OUTPUT && !property.isCustom"
+                     [class.io-property__connection-dot--custom]="property?.isCustom"
+                     [class.io-property__connection-dot--disabled]="property?.valueType === 'static'"
+                     [class.io-property__connection-dot--left]="ioType === ioTypes.INPUT">
+                    <div class="connection-dot__tooltip-wrap"
+                         *ngIf="dotHovered || ioType === ioTypes.INPUT && isConnectionError">
+                        <div class="dot-tooltip"
+                             [class.dot-tooltip--right]="ioType === ioTypes.INPUT">
+                            <div class="dot-tooltip__text"
+                                 *ngIf="dotHovered">
+                                This property already has connection
+                            </div>
+                            <div class="dot-tooltip__text"
+                                 *ngIf="isConnectionError">
+                                Properties are not compatible
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="io-property__parent-connection"
+                     *ngIf="!property?.isCustom"
+                     [ngStyle]="connectionStyle"></div>
+            </div>
+
+            <ng-container *ngIf="propertyForm && !property.isCustom">
+                <ng-container *ngTemplateOutlet="inputs"></ng-container>
+            </ng-container>
+        </div>
+        <div class="io-property__value-type-section"
+             [formGroup]="valueTypeForm"
+             *ngIf="valueTypeForm">
+            <div class="io-property__value-type">
+                <div class="radio">
+                    <input type="radio"
+                           formControlName="valueType"
+                           value="default"
+                           tabindex="1"
+                           class="radio__input">
+                </div>
+                <label class="io-property__value-type-label">Default</label>
+            </div>
+            <div class="io-property__value-type">
+                <div class="radio">
+                    <input type="radio"
+                           formControlName="valueType"
+                           value="static"
+                           tabindex="1"
+                           class="radio__input">
+                </div>
+                <label class="io-property__value-type-label">Static</label>
+            </div>
+        </div>
+
+        <div class="icon icon--delete icon--dynamic io-property__delete"
+             (click)="onRemoveProperty($event)"
+             *ngIf="property?.isCustom"></div>
+    </div>
+    <ng-container *ngIf="property?.nestedProperties">
+        <ai-io-property *ngFor="let prop of property.nestedProperties; let i = index"
+                        [isLast]="i === property.nestedProperties.length - 1"
+                        [ioType]="ioType"
+                        [parentReference]="propertyViewRef"
+                        [property]="prop"></ai-io-property>
+    </ng-container>
+</div>
+
+<ng-template #inputs>
+    <ng-container [formGroup]="propertyForm">
+        <div [class.input-wrap--error]="false"
+             *ngIf="property.type !== propertyTypes.boolean && !property.enum; else propertyDropdown"
+             class="input-wrap input-wrap--contained input-wrap--small io-property__input">
+            <input class="input-wrap__input"
+                   type="text"
+                   aiFocus
+                   autocomplete="off"
+                   formControlName="propertyValue">
+        </div>
+
+        <ng-template #propertyDropdown>
+            <ng-select class="dropdown dropdown--contained io-property__dropdown"
+                       [class.dropdown--error]="false"
+                       autofocus
+                       bindLabel="label"
+                       bindValue="value"
+                       [items]="propertyItems"
+                       [clearable]="true"
+                       formControlName="propertyValue">
+            </ng-select>
+        </ng-template>
+    </ng-container>
+</ng-template>

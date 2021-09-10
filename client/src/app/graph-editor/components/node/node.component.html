@@ -1,0 +1,423 @@
+<div class="node"
+     *ngIf="!isInformationNode"
+     [class.node--shadow-right]="isSubGraphIo && nodeData?.subGraphIoType === 'input'"
+     [class.node--shadow-left]="isSubGraphIo && nodeData?.subGraphIoType === 'output'"
+     [class.node--selected]="!serviceDisabled && !isSubGraphIo && selected()"
+     [class.node--template-node]="isTemplateNode"
+     [class.node--user-node]="isUserNode"
+     [class.node--service-node]="isServiceNode"
+     [class.node--running]="!serviceDisabled && (statusIsRunning || isServiceNode)"
+     [class.node--running-on-another-release]="!serviceDisabled && isRunningOnAnotherRelease"
+     [class.node--pending]="!isServiceNode && statusIsPending"
+     [class.node--error]="!isSubGraphIo && !serviceDisabled && statusIsError"
+     [class.node--warning]="!isSubgraph && !isSubGraphIo && (((isCoreNode || isUserNode) && !nodeData?.isLatest && nodeData?.project) || statusIsError)"
+     [class.node--stopped]="isStopped && !isServiceNode"
+     [class.node--service-disabled]="serviceDisabled"
+     [class.node--sub-graph-io]="isSubGraphIo"
+     [class.node--sub-graph]="isSubgraph"
+     [class.node--dashboard-application]="nodeData?.project?.projectType === 'APP' && nodeData?.project?.projectSubType === 'DASHBOARD'"
+     [class.node--automation-application]="nodeData?.project?.projectType === 'APP' && nodeData?.project?.projectSubType === 'AUTOMATION'"
+     [class.node--application]="nodeData?.project?.projectType === 'APP' && nodeData?.project?.projectSubType === 'APPLICATION'"
+     [class.node--aos-node]="isAOSNode"
+     [class.node--robot-app-node]="isRobotAppNode"
+     [class.node--device-node]="isDeviceNode"
+     [class.node--core-node]="isCoreNode"
+     [class.node--controller-node]="isControllerNode"
+     [ngStyle]="nodeStyling"
+     (dblclick)="goToSubGraph($event)"
+     #nodeViewRef
+     aiTooltip="{{ ((isCoreNode || isUserNode) && !nodeData?.isLatest && nodeData?.project) ? 'New version available' : '' }}">
+    <div class="node__status-bg"
+         [class.node__status-bg--running]="!serviceDisabled && statusIsRunning">
+        <div class="node__header">
+            <div class="node__header-background"
+                 [class.node__header-background--device-stripes]="isControllerNode || isBridge"
+                 [class.node__header-background--provisional-node]="isTemplateNode">
+            </div>
+            <span class="node__header-device-label"
+                  *ngIf="isDeviceNode || isControllerNode || isAOSNode || isRobotAppNode || isAOSApp">
+                {{ isBridge ? 'Cloud' : 'Edge' }}
+            </span>
+            <span class="node__header-buttons"
+                  *ngIf="isSubgraph && !isSubGraphIo && !isSubgraphEmpty">
+                <div class="icon icon--dynamic node__deploy-button icon--pause icon--white mr--8"
+                     aiTooltip="Stop Subgraph"
+                     (click)="deployNodeInstance(false, $event)"></div>
+                <div class="icon icon--dynamic node__deploy-button icon--play icon--white"
+                     aiTooltip="Deploy Subgraph"
+                     (click)="deployNodeInstance(true, $event)"></div>
+            </span>
+            <span class="node__aitheon-logo" *ngIf="isServiceNode || nodeData?.type === nodeType.SERVICE"></span>
+            <div class="node__header-main"
+                 [class.align-items-start]="!isSubGraphIo">
+                <div class="node__title"
+                     *ngIf="isSubGraphIo; else nodeHeader">
+                    {{ nodeData?.name || 'Subgraph' }}
+                    {{ nodeData?.subGraphIoType }}
+                </div>
+                <ng-template #nodeHeader>
+                    <div class="icon icon--dynamic node__deploy-button"
+                         [aiTooltip]="statusIsPending ? 'You can\'t stop node when it status is pending' : (statusIsRunning ? 'Stop ' + (isSubgraph ? 'Subgraph' : 'Node') : 'Deploy ' + (isSubgraph ? 'Subgraph' : 'Node'))"
+                         (click)="deployNodeInstance(!statusIsRunning && !statusIsPending, $event)"
+                         *ngIf="!isSubGraphIo && !isSubgraph && (isSubgraph || nodeData.type !== nodeType.SERVICE_NODE && nodeData.type !== nodeType.TEMPLATE_NODE)"
+                         [class.icon--pause]="statusIsRunning || statusIsPending"
+                         [class.icon--play]="!statusIsRunning && !statusIsPending"
+                         [class.icon--red]="statusIsRunning || statusIsPending"
+                         [class.icon--disabled]="statusIsPending"
+                         [class.icon--green]="!statusIsRunning && !statusIsPending">
+                    </div>
+                    <div class="node__icon {{ (isServiceSubgraph && (nodeData?.service === 'FACTORY' || nodeData?.service === 'BUILDING')) && 'warehouse_manager' ||
+                                              (isServiceNode || isServiceSubgraph) && nodeData?.name.toLowerCase()  }}"
+                         [class.service-icon]="isServiceNode || nodeData?.type === nodeType.SERVICE || isCoreNode"
+                         *ngIf="!isSubGraphIo && graph?.subType !== 'SPECIAL' && !nodeData ?.storeRequest ?.nodeStyling ?.logo"
+                         [class.system_graph]="isCoreNode">
+                    </div>
+                    <div *ngIf="!isSubGraphIo && nodeData ?.storeRequest ?.nodeStyling ?.logo"
+                             class="node__logo-wrap">
+                            <img [src]="nodeData ?.storeRequest ?.nodeStyling.logo.url" class="node__logo"
+                                 alt="Node Logo">
+                        </div>
+                    <div class="d-flex align-items-center"
+                         [class.pl--16]="isServiceNode && graph?.subType === 'SPECIAL'">
+                        <div class="node__status"
+                             *ngIf="!isSubGraphIo && !isSubgraph"
+                             [class.node__status--hidden]="statusIsIdle"
+                             [class.node__status--running]="!serviceDisabled && statusIsRunning"
+                             [class.node__status--pending]="!serviceDisabled && statusIsPending"
+                             [class.node__status--error]="!serviceDisabled && statusIsError">
+                        </div>
+                        <div class="node__subgraph-status-container" *ngIf="isSubgraph && !isSubGraphIo">
+                            <div class="node__subgraph-status"
+                                 aiTooltip="Working nodes"
+                                 *ngIf="nodeData?.statuses?.RUNNING">
+                                <div class="node__status-ball node__status-ball--green"></div>
+                                <div class="node__status-counter">{{ nodeData?.statuses?.RUNNING }}</div>
+                            </div>
+                            <div class="node__subgraph-status"
+                                 aiTooltip="Nodes with error"
+                                 *ngIf="nodeData?.statuses?.ERROR">
+                                <div class="node__status-ball node__status-ball--red"></div>
+                                <div class="node__status-counter">{{ nodeData?.statuses?.ERROR }}</div>
+                            </div>
+                            <div class="node__subgraph-status"
+                                 aiTooltip="Nodes in pending"
+                                 *ngIf="nodeData?.statuses?.PENDING">
+                                <div class="node__status-ball node__status-ball--orange"></div>
+                                <div class="node__status-counter">{{ nodeData?.statuses?.PENDING }}</div>
+                            </div>
+                            <div class="node__subgraph-status"
+                                 aiTooltip="Stopped nodes"
+                                 *ngIf="nodeData?.statuses?.STOPPED">
+                                <div class="node__status-ball node__status-ball--gray"></div>
+                                <div class="node__status-counter">{{ nodeData?.statuses?.STOPPED }}</div>
+                            </div>
+                            <div class="node__subgraph-status"
+                                 aiTooltip="Empty sub-graphs inside"
+                                 *ngIf="nodeData?.statuses?.EMPTY">
+                                <div class="node__status-ball node__status-ball--empty"></div>
+                                <div class="node__status-counter">{{ nodeData?.statuses?.EMPTY }}</div>
+                            </div>
+                            <div class="node__subgraph-status"
+                                 *ngIf="isSubgraphEmpty">
+                                <div class="node__subgraph-status--empty">Empty</div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="node__title"
+                                 *ngIf="!nodeNameControl; else nameControl"
+                                 (click)="initNodeNameControl($event)"
+                                 [class.node__title--error]="isNameDuplicated"
+                                 [class.node__title--dynamic]="!isSubGraphIo &&
+                                 nodeData?.type !== nodeType.SERVICE_NODE &&
+                                 nodeData?.type !== nodeType.SERVICE">
+                                {{ (name | async) }}
+                            </div>
+                            <ng-template #nameControl>
+                                <div *ngIf="nodeNameControl"
+                                     class="input-wrap input-wrap--ghost input-wrap--small node__title-input"
+                                     [class.node__title-input--disabled]="nodeData?.type === nodeType.SERVICE_NODE || nodeData?.type === nodeType.SERVICE || readonly"
+                                     [class.node__title-input--error]="isNameDuplicated">
+                                    <input class="input-wrap__input node__name-input"
+                                           aiFocus
+                                           type="text"
+                                           (keydown)="submitNodeNameOnEnter($event)"
+                                           [formControl]="nodeNameControl"
+                                           autocomplete="off"
+                                           placeholder="Enter Node Name">
+                                </div>
+                            </ng-template>
+                            <div class="node__title node__title--dark"
+                                 *ngIf="!isSubGraphIo">{{ nodeSubTitle | titlecase }}</div>
+                        </div>
+                    </div>
+                    <div class="ml--auto d-flex">
+                        <button class="node__go-app-button button button--small button--ghost mr--4"
+                                *ngIf="isRobotAppNode || isAOSNode || nodeData?.project?.projectType === 'APP' && !isAOSApp "
+                                (click)="goToApplication()">Go to App
+                        </button>
+                    </div>
+                    <div class="node__more"
+                         *ngIf="!readonly && !isSubGraphIo"
+                         aiClickOutside
+                         (clickedOutside)="anchorElement ? anchorElement = null : ''">
+                        <div class="icon icon--more icon--white icon--dynamic node__show-more"
+                             [class.icon--disabled]="serviceDisabled"
+                             aiTooltip="{{ serviceDisabled ? '' : 'Show More' }}"
+                             [hideOnClick]="true"
+                             (click)="serviceDisabled ? '' : showMore($event)"></div>
+                        <div class="node__more-open-select"
+                             *ngIf="anchorElement">
+                            <span class="node__more-open-item"
+                                  *ngIf="!isServiceNode && !isSubgraph && !nodeData.isLatest"
+                                  (click)="updateToLatest($event)">Update to latest version</span>
+                            <span class="node__more-open-item"
+                                  (click)="showSettings($event)">Settings</span>
+                            <span class="node__more-open-item"
+                                  *ngIf="(isApp || isRobotAppNode || isAOSNode || isAOSApp) && isNodeOwner"
+                                  (click)="editNodeApplication($event)">Edit Application</span>
+                            <span class="node__more-open-item"
+                                  *ngIf="nodeData ?.settings && !isSubgraph && !isServiceNode && !nodeData?.project"
+                                  (click)="showRequestModal($event)">Publish Request</span>
+                            <span class="node__more-open-item"
+                                  *ngIf="!isServiceNode && !isSubgraph"
+                                  (click)="showTrainingSettings($event)">Training</span>
+                            <span class="node__more-open-item"
+                                  *ngIf="!isSubgraph && nodeData?.project"
+                                  (click)="showReleases($event)">Releases</span>
+                            <span class="node__more-open-item"
+                                  *ngIf="(user$ | async)?.envAccess === 'ALPHA' && !statusIsRunning || !isReference && nodeData?.type !== nodeType.SERVICE && nodeData?.type !== nodeType.SERVICE_NODE"
+                                  (click)="onDeleteNode($event)">Remove</span>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div class="node__connections"
+             *ngIf="nodeIo?.length || isSubGraphIo"
+             cdkDropList
+             (cdkDropListDropped)="onEndIoDrag($event)"
+             [cdkDropListDisabled]="!!editingIo || !isSubGraphIo"
+             [class.node__connections--one-column]="isSubGraphIo">
+            <div class="node__io"
+                 [class.node__io--filled]="isSubGraphIo"
+                 cdkDrag
+                 (cdkDragStarted)="onIoDragStarted()"
+                 cdkDragBoundary=".node__connections"
+                 [cdkDragData]="item"
+                 [class.node__io--left]="!isSubGraphIo && item.placement === socketPlacements.LEFT"
+                 [class.node__io--right]="!isSubGraphIo && item.placement === socketPlacements.RIGHT"
+                 [class.node__io--center]="!isSubGraphIo && item.placement === socketPlacements.CENTER"
+                 *ngFor="let item of nodeIo">
+                <ng-container [ngSwitch]="item.placement">
+                    <ng-container *ngSwitchCase="socketPlacements.LEFT">
+                        <div class="node__io-socket node__io-socket--left">
+                            <ng-container *ngTemplateOutlet="socketView; context: {
+                                placement: socketPlacements.LEFT,
+                                ioData: item,
+                                io: item.io
+                            }"></ng-container>
+                            <div class="node__io-title"
+                                 *ngIf="item.io.key !== editingIo ?.key"
+                                 (click)="editIo($event, item.io)"
+                                 [class.node__io-title--dynamic]="!readonly && isSubGraphIo">
+                                {{ item.io.name | fileExtension }}
+                            </div>
+                            <div class="icon icon--delete icon--size-16px icon--dynamic node__sub-graph-io-delete node__sub-graph-io-delete--right"
+                                 aiTooltip="Remove Input"
+                                 (click)="deleteIo($event, item)"
+                                 *ngIf="!ioDragging && !readonly && isSubGraphIo && item.io.key !== editingIo ?.key"></div>
+                            <ng-template [ngIf]="isSubGraphIo && item.io.key === editingIo ?.key">
+                                <ng-container *ngTemplateOutlet="editedIo"></ng-container>
+                            </ng-template>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="socketPlacements.RIGHT">
+                        <div class="node__io-socket node__io-socket--right">
+                            <ng-container *ngTemplateOutlet="socketView; context: {
+                                ioData: item,
+                                placement: socketPlacements.RIGHT,
+                                io: item.io
+                            }"></ng-container>
+                            <div class="node__io-title"
+                                 *ngIf="item.io.key !== editingIo ?.key"
+                                 (click)="editIo($event, item.io)"
+                                 [class.node__io-title--dynamic]="!readonly && isSubGraphIo">
+                                {{ item.io.name | fileExtension }}
+                            </div>
+                            <div class="icon icon--delete icon--dynamic icon--size-16px node__sub-graph-io-delete node__sub-graph-io-delete--left"
+                                 aiTooltip="Remove Output"
+                                 (click)="deleteIo($event, item)"
+                                 *ngIf="!ioDragging && !readonly && isSubGraphIo && item.io.key !== editingIo ?.key"></div>
+                            <ng-template [ngIf]="isSubGraphIo && item.io.key === editingIo ?.key">
+                                <ng-container *ngTemplateOutlet="editedIo"></ng-container>
+                            </ng-template>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="socketPlacements.CENTER">
+                        <div class="node__io-socket node__io-socket--centered">
+                            <ng-container *ngTemplateOutlet="socketView; context: {
+                                ioData: item,
+                                placement: socketPlacements.LEFT,
+                                io: item.io[0]
+                            }"></ng-container>
+                            <div class="node__io-title node__io-title--fullwidth">{{ item.io[0].name  | fileExtension }}</div>
+                            <ng-container *ngTemplateOutlet="socketView; context: {
+                                ioData: item,
+                                placement: socketPlacements.RIGHT,
+                                io: item.io[1]
+                            }"></ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <ng-container *ngTemplateOutlet="addIo; context: addIoContext"></ng-container>
+        </div>
+
+        <div class="node__connections"
+             *ngIf="mappingIo?.length && (hasIO && (hasDisconnectedInput || hasDisconnectedOutput))">
+            <ng-container
+                    *ngFor="let item of mappingIo">
+                <div class="node__io node__io--center"
+                     *ngIf="item.type === 'INPUT' && hasDisconnectedInput || item.type === 'OUTPUT' && hasDisconnectedOutput">
+                    <div class="node__io-socket node__io-socket--centered">
+                        <ng-container *ngTemplateOutlet="socketView; context: {
+                                mapping: true,
+                                ioData: item,
+                                placement: socketPlacements.LEFT,
+                                io: item.io[0],
+                                active: item.activeLeft
+                            }">
+                        </ng-container>
+                        <div class="node__io-title node__io-title--fullwidth">Create {{ item.type.toLowerCase() }}</div>
+                        <ng-container *ngTemplateOutlet="socketView; context: {
+                                mapping: true,
+                                ioData: item,
+                                placement: socketPlacements.RIGHT,
+                                io: item.io[1],
+                                active: item.activeRight
+                            }">
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <ng-template [ngIf]="inference.enabled && !isSubGraphIo">
+            <div class="node__model-loading"
+                 *ngIf="loading; else modelBlock">
+                <ai-loading></ai-loading>
+            </div>
+            <ng-template #modelBlock>
+                <div class="node__add-model-bg">
+                    <div class="node__add-model"
+                         *ngIf="!readonly && !inference.modelId; else modelView"
+                         (click)="showToolbox($event)"
+                         [class.node__add-model--error]="false">
+                        <span class="icon icon--plus icon--size-16px d-inline-block mr--4"
+                              [class.icon--red]="false"></span>
+                        Choose Model
+                    </div>
+                </div>
+                <ng-template #modelView>
+                    <div class="node__model">
+                        <div class="node__add-model-list-item node__added-model"
+                             [class.node__status-bg--running]="statusIsRunning">
+                            <div>
+                                <div class="node__list-item-text"
+                                     [title]="model ?.name">{{ model?.name }}</div>
+                                <div class="node__list-item-text node__list-item-text--dark">{{ model?.summary }}</div>
+                            </div>
+                            <div class="icon icon--edit icon--dynamic mr--4"
+                                 *ngIf="!readonly && !editingModel; else deleteIcon"
+                                 (click)="showToolbox($event)"></div>
+                            <ng-template #deleteIcon>
+                                <div class="icon icon--delete icon--dynamic mr--4"
+                                     *ngIf="!readonly"
+                                     (click)="deleteModel($event)"></div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </ng-template>
+    </div>
+</div>
+
+<ng-template #addIo
+             let-callback="callback"
+             let-className="className"
+             let-title="title"
+             let-placeholder="placeholder">
+    <div class="node__add-io-section">
+        <div [class.input-wrap--error]="!ioControl.valid && ioControl.touched"
+             *ngIf="!readonly && ioControl && !editingIo"
+             class="input-wrap input-wrap--contained input-wrap--small position-relative">
+            <input class="input-wrap__input node__add-io-input"
+                   type="text"
+                   (keydown)="submitIoOnEnter($event)"
+                   autocomplete="off"
+                   [formControl]="ioControl"
+                   placeholder={{placeholder}}>
+            <div class="icon icon--close icon--size-16px icon--dynamic node__delete-io"
+                 (click)="stopAddingIo($event)"></div>
+        </div>
+        <div class="icon icon--plus icon--dynamic"
+             [aiTooltip]="title"
+             [class.icon--disabled]="ioControl"
+             *ngIf="!readonly && isSubGraphIo && !editingIo"
+             [ngClass]="className"
+             (click)="callback($event)"></div>
+    </div>
+</ng-template>
+
+<ng-template #editedIo>
+    <div [class.input-wrap--error]="!ioControl.valid && ioControl.touched"
+         *ngIf="!readonly && ioControl"
+         class="input-wrap input-wrap--contained position-relative ml--8 mr--8">
+        <input class="input-wrap__input node__add-io-input"
+               type="text"
+               (keydown)="submitIoOnEnter($event)"
+               (blur)="triggerSaveIo($event)"
+               (focus)="setIoControlFocused()"
+               autocomplete="off"
+               [formControl]="ioControl"
+               placeholder="I/O name">
+        <div class="icon icon--close icon--size-16px node__delete-io node__delete-io--top-3"
+             (click)="stopEditingIo($event)"></div>
+    </div>
+</ng-template>
+
+<div *ngIf="isInformationNode" #nodeViewRef>
+    <ai-information-node [node]="node"
+                         [clicked]="clickEvent"
+                         [editor]="editor">
+    </ai-information-node>
+</div>
+
+<ng-template #socketView
+             let-io="io"
+             let-ioData="ioData"
+             let-placement="placement"
+             let-mapping="mapping"
+             let-active="active">
+    <socket node-socket
+            [custom]="true"
+            [io]="io"
+            [socket]="io.socket"
+            class="node__socket"
+            [class.node__socket--center-left]="ioData?.placement === socketPlacements.CENTER && placement === socketPlacements.LEFT"
+            [class.node__socket--center-right]="ioData?.placement === socketPlacements.CENTER && placement === socketPlacements.RIGHT">
+        <ai-socket-view *ngIf="(!mapping || mapping && active); else mappingIoView"
+                        [placement]="placement"
+                        [ioData]="ioData"
+                        [io]="io"
+                        [connectionPickData]="connectionPickData"
+                        [node]="node"
+                        [isInterfaceNode]="isSubGraphIo"></ai-socket-view>
+        <ng-template #mappingIoView>
+            <div class="node__add-mapping-connection"
+                 [class.node__add-mapping-connection--right]="placement === socketPlacements.RIGHT"
+                 (click)="placement === socketPlacements.LEFT ? ioData.activeLeft = true : ioData.activeRight = true"></div>
+        </ng-template>
+    </socket>
+</ng-template>

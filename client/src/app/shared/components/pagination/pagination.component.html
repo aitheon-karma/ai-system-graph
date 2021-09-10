@@ -1,0 +1,49 @@
+<div class="ai-pagination">
+    <nav aria-label="Pagination">
+        <ul class="pagination pagination-sm mb--0" *ngIf="totalPages > 1; else pagesPlaceholder">
+            <li class="page-item" (click)="selectPage(1, $event)" *ngIf="currentPage > 2">
+                <span class="page-link page-link--gold" title="Go to first page">&#x3c;</span>
+            </li>
+            <li class="page-item page-item" (click)="selectPage(currentPage - 1, $event)" *ngIf="currentPage > 1">
+                <span class="page-link page-link--gold" title="Go to previous page">Previous</span>
+            </li>
+            <li class="disabled page-item" (click)="cancelEvent($event)" *ngIf="(currentPage - range) > 1">
+                <span class="page-link">...</span>
+            </li>
+            <li class="page-item" *ngFor="let page of pages" [class.active]="page == currentPage">
+                <span class="page-link" (click)="selectPage(page, $event)">
+                    {{page}}
+                </span>
+            </li>
+            <li class="disabled page-item" (click)="cancelEvent($event)" *ngIf="(currentPage + range) < totalPages">
+                <span class="page-link">...</span>
+            </li>
+            <li class="page-item page-item--gold" (click)="selectPage(currentPage + 1, $event)"
+                *ngIf="currentPage !== totalPages">
+                <span class="page-link page-link--gold" title="Go to next page">Next</span>
+            </li>
+            <li class="page-item" (click)="selectPage(totalPages, $event)" *ngIf="currentPage <= (totalPages - 2)">
+                <span class="page-link page-link--gold" title="Go to last page">&#x3e;</span>
+            </li>
+
+        </ul>
+        <ng-template #pagesPlaceholder>
+            <ul class="pagination pagination-sm mb--0">
+                <li class="page-item active">
+                <span class="page-link ai-pagination__cursor-default">
+                    1
+                </span>
+                </li>
+            </ul>
+        </ng-template>
+    </nav>
+    <div class="ai-pagination__separator"></div>
+    <div class="ai-pagination__dropdown">
+        <ng-select class="dropdown dropdown--contained"
+                   [items]="pageSizes"
+                   [clearable]="clearable"
+                   [searchable]="searchable"
+                   [formControl]="rowsCount">
+        </ng-select>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="add-custom-property">
+    <button class="button button--medium button--ghost"
+        (click)="toggle($event)">
+        <span class="icon icon--gold icon--plus icon--size-16px"></span>
+        add custom field
+    </button>
+
+    <div class="add-custom-property__types-dropdown"
+         aiClickOutside
+         (click)="stopEvent($event)"
+         (clickedOutside)="close()"
+         *ngIf="isOpened">
+        <div class="add-custom-property__dropdown-item"
+             (click)="onTypeSelect(item.key)"
+             *ngFor="let item of types">
+            <div class="add-custom-property__property-icon {{ 'type--' + item.key }}"></div>
+            {{ item.label }}
+        </div>
+    </div>
+</div>
